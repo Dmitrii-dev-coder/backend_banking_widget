@@ -51,6 +51,7 @@ def checking_sort_by_date(my_list: list, descending: bool = True) -> list:
     return sorted_list
 
 
+# Запуск функций
 if __name__ == "__main__":
     checking_masks_functions()
     print(checking_widget_functions1("Счет 64686473678894779589"))
