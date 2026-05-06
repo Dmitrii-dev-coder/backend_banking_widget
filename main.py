@@ -1,9 +1,10 @@
 # Импорт функция из модулей masks.py и widget.py
 from src.masks import get_mask_account, get_mask_card_number
+from src.processing import filter_by_state, sort_by_date
 from src.widget import get_date, mask_account_card
 
 
-# Проверка правильной работы функция из модуля masks
+# Проверка правильной работы функций из модуля masks
 def checking_masks_functions() -> None:
     """Тест на правильность маскировки номера карты и счета"""
 
@@ -35,6 +36,22 @@ def checking_widget_functions2(date_iso_8601: str) -> str:
     return extracted_date
 
 
+# Проверка работы функций из модуля processing.py
+def checking_filter_by_state(my_list: list, state: str = "EXECUTED") -> list:
+    """Тест правильности фильтрации данных в виде списка словарей - my_list по 'state'"""
+    filtered_list = filter_by_state(my_list, state)
+
+    return filtered_list
+
+
+def checking_sort_by_date(my_list: list, descending: bool = True) -> list:
+    """Тест правильности сортировки данных в виде списка словарей - my_list по 'date'"""
+    sorted_list = sort_by_date(my_list, descending)
+
+    return sorted_list
+
+
+# Запуск функций
 if __name__ == "__main__":
     checking_masks_functions()
     print(checking_widget_functions1("Счет 64686473678894779589"))
@@ -51,3 +68,29 @@ if __name__ == "__main__":
     Visa Gold 5999414228426353
     Счет 73654108430135874305
     """
+
+    # Данные для проверки функций из модуля processing.py
+
+    print(
+        checking_filter_by_state(
+            [
+                {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+                {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+                {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
+                {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+            ],
+            "CANCELED",
+        )
+    )
+
+    print(
+        sort_by_date(
+            [
+                {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+                {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+                {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
+                {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+            ],
+            False,
+        )
+    )
