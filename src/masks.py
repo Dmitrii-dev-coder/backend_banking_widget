@@ -1,20 +1,47 @@
-def get_mask_card_number(card_number: str) -> str:
+def get_mask_card_number(card_number: str | int) -> str:
     """Функция принимает на вход номер карты и возвращает его замаскированным."""
 
     # Превращаем номер карты в строку, если пришло число
     card_number_str = str(card_number)
 
+    # Удаляем пробелы и дефисы если они есть.
+    card_number_str = card_number_str.replace(" ", '').replace("-", "")
+
+    # Проверяем что номер карты содержит только цифры
+    if not card_number_str.isdigit():
+        raise ValueError("Номер карты должен содержать 16 цифр и никаких других символов")
+
+    # Проверяем длину номера карты
+    if len(card_number_str) != 16:
+        raise ValueError("Номер карты должен содержать 16 цифр и никаких других символов")
+
+    # Проверяем на эффект залипания клавиши
+    if len(set(card_number_str)) == 1:
+        raise ValueError("Номер карты содержит только одинаковые цифры (эффект залипания клавиши).")
+
     # Вставление пробела после каждых четыре знака
-    card_mask = card_number_str[0:4] + " " + card_number_str[4:6] + "**" + " " + "****" + " " + card_number_str[12:16]
+    card_mask = f"{card_number_str[:4]} {card_number_str[4:6]}** **** {card_number_str[12:]}"
 
     return card_mask
 
 
-def get_mask_account(account_number: str) -> str:
+def get_mask_account(account_number: str | int) -> str:
     """Функция принимает на вход номер счета и возвращает его замаскированным."""
 
     # Превращаем номер счета в строку, если пришло число
     account_number_str = str(account_number)
+
+    # Проверяем что номер счета содержит только цифры
+    if not account_number_str.isdigit():
+        raise ValueError("Номер счета должен содержать 20 цифр и никаких других символов")
+
+    # Проверяем длину номера счета
+    if len(account_number_str) != 20:
+        raise ValueError("Номер счета должен содержать 20 цифр и никаких других символов")
+
+    # Проверяем на эффект залипания клавиши
+    if len(set(account_number_str)) == 1:
+        raise ValueError("Номер карты содержит только одинаковые цифры (эффект залипания клавиши).")
 
     # Берем последние 4 цифры и добавляем две звездочки перед ними
     account_mask = f"**{account_number_str[-4:]}"
