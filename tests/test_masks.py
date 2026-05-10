@@ -3,7 +3,7 @@ import pytest
 from src.masks import get_mask_card_number, get_mask_account
 
 
-# 0. Проверка функции get_mask_card_number
+# 0. Проверка функции get_mask_card_number.
 # Тест 001: Тестирование правильности маскирования номера карты.
 
 @pytest.fixture
@@ -40,7 +40,7 @@ def test_get_mask_card_number_invalid_length(card_number):
     with pytest.raises(ValueError, match="Номер карты должен содержать 16 цифр и никаких других символов"):
         get_mask_card_number(card_number)
 
-# Тест 005: Проверка, что функция корректно обрабатывает входные строки, где отсутствует номер карты
+# Тест 005: Проверка, что функция корректно обрабатывает входные строки, где отсутствует номер карты.
 
 def test_get_mask_card_number_invalid_input():
     card_number = None
@@ -56,7 +56,7 @@ def test_get_mask_card_number_invalid_input():
 def test_get_mask_card_number_clean(card_number, expected):
     assert get_mask_card_number(card_number) == expected
 
-# Тест 007 Проверка на то, что функция не принимает номера карт состоящие из одинаковых цифр (залипание клавиши)
+# Тест 007 Проверка на то, что функция не принимает номера карт состоящие из одинаковых цифр (залипание клавиши).
 
 @pytest.mark.parametrize("card_number", [
                                          "0000000000000000",  # 16 нулей
@@ -67,7 +67,7 @@ def test_get_mask_card_number_repeating_digits(card_number):
         get_mask_card_number(card_number)
 
 
-# 1. Проверка функции get_mask_account
+# 1. Проверка функции get_mask_account.
 # Тест 101: Тестирование правильности маскирования номера карты.
 
 @pytest.fixture
@@ -104,14 +104,14 @@ def test_get_mask_account_invalid_length(account_number):
     with pytest.raises(ValueError, match="Номер счета должен содержать 20 цифр и никаких других символов"):
         get_mask_account(account_number)
 
-# Тест 105: Проверка, что функция корректно обрабатывает входные строки, где отсутствует номер счета
+# Тест 105: Проверка, что функция корректно обрабатывает входные строки, где отсутствует номер счета.
 
 def test_get_mask_account_invalid_input():
     account_number = None
     with pytest.raises((ValueError, TypeError)):
         get_mask_account(account_number)  # type: ignore[arg-type]
 
-# Тест 106: Проверка номера счета c повторяющейся цифрой, например "00000000000000000000" (залипание клавиши)
+# Тест 106: Проверка номера счета c повторяющейся цифрой, например "00000000000000000000" (залипание клавиши).
 @pytest.mark.parametrize("account_number", [
                                          "00000000000000000000",  # 20 нулей
                                          "11111111111111111111"   # 20 единиц
