@@ -90,7 +90,7 @@ def test_get_date_with_invalid_data(invalid_data):
 
     assert str(exc_info.value) == error_text
 
-# Тест 104: Тестирование функции на пустую строку или отсутствие времени.
+# Тест 104: Тестирование функции на пустую строку или None.
 @pytest.mark.parametrize("date_iso_8601", [None,
                                            "",
                                            ])
