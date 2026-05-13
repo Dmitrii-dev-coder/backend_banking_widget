@@ -3,6 +3,44 @@
 
 ## Banking widget - это backend, который готовит данные для отображения в widget, в личном кабинета клиента крупного банка. Этот виджет показывает несколько последних успешных банковских операций клиента.
 
+## -------------Структура проекта---------------------
+
+**Корневая директория проекта:**
+
+```
+.
+|-- .coverage
+|-- .flake8
+|-- .git
+|-- .gitignore
+|-- .idea
+|-- .mypy_cache
+|-- .pytest_cache
+|-- .venv
+|-- README.md
+|-- htmlcov
+|-- main.py
+|-- poetry.lock
+|-- pyproject.toml
+|-- requirements.txt
+|-- scripts
+|-- src
+`-- tests
+
+Подробности папки src:
+src
+|-- __init__.py
+|-- masks.py
+|-- processing.py
+`-- widget.py
+
+Подробности папки tests:
+tests
+|-- __init__.py
+|-- test_masks.py
+|-- test_proccesing.py
+`-- test_widget.py
+```
 ## -------------Установка и использование-------------
 
 ### **Требования (Requirements):**
