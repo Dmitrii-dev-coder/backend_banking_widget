@@ -76,7 +76,7 @@ def test_get_mask_card_number_invalid_input() -> None:
         get_mask_card_number(card_number)  # type: ignore[arg-type]
 
 
-# Тест 006 Проверка на то, что функция очищает номер карты от пробелов и дефисов.
+# Тест 006: Проверка на то, что функция очищает номер карты от пробелов и дефисов.
 
 
 @pytest.mark.parametrize(
@@ -93,7 +93,7 @@ def test_get_mask_card_number_clean(card_number: str, expected: str) -> None:
     assert get_mask_card_number(card_number) == expected
 
 
-# Тест 007 Проверка на то, что функция не принимает номера карт состоящие из одинаковых цифр (залипание клавиши).
+# Тест 007: Проверка на то, что функция не принимает номера карт состоящие из одинаковых цифр (залипание клавиши).
 
 
 @pytest.mark.parametrize(

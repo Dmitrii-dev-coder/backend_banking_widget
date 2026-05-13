@@ -2,9 +2,9 @@ import pytest
 
 from src.processing import filter_by_state, sort_by_date
 
-
 # 0. Проверка функции filter_by_state.
 # Тест 001: Тестирование правильности фильтрации списка словарей по заданному статусу 'state'.
+
 
 @pytest.fixture
 def delivery_valid_data() -> list[dict]:
@@ -40,6 +40,7 @@ def test_filter_by_state_valid_data(delivery_valid_data: list[dict]) -> None:
 
 # Тест 002: Проверка работы функции без передачи аргумента параметру 'state'.
 #     Проверка на то, что функция использует значение state по умолчанию.
+
 
 def test_filter_by_state_valid_data_default_state(delivery_valid_data: list[dict]) -> None:
     """Без указания статуса фильтрация идёт по умолчанию ('EXECUTED')."""
@@ -102,9 +103,7 @@ def test_filter_by_state_without_state(delivery_invalid_data: list[dict]) -> Non
         ),
     ],
 )
-def test_filter_by_state_diff_state(
-    my_list_dict: list[dict], state: str, expected: list[dict]
-) -> None:
+def test_filter_by_state_diff_state(my_list_dict: list[dict], state: str, expected: list[dict]) -> None:
     """Параметризованный тест фильтрации по разным значениям статуса 'state'."""
     assert filter_by_state(my_list_dict, state) == expected
 
@@ -166,3 +165,5 @@ def test_sort_by_date_invalid_data() -> None:
     ]
     with pytest.raises(ValueError) as exc_info:
         sort_by_date(my_list_dict)
+
+    assert str(exc_info.value) == error_text
