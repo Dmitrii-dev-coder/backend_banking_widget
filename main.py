@@ -2,6 +2,7 @@
 from src.masks import get_mask_account, get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
 from src.widget import get_date, mask_account_card
+from src.generators import filter_by_currency, transaction_descriptions, card_number_generator
 
 
 # Проверка правильной работы функций из модуля masks
@@ -51,7 +52,7 @@ def checking_sort_by_date(my_list: list, descending: bool = True) -> list:
     return sorted_list
 
 
-# Запуск функций
+# Запуск функций из модулей
 if __name__ == "__main__":
     checking_masks_functions()
     print(checking_widget_functions1("Счет 64686473678894779589"))
