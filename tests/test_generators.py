@@ -226,7 +226,7 @@ def test_card_number_generator_invalid_range() -> None:
     assert "не может быть больше конечного" in str(error_info.value)
 
 
-# Тест 205: Проверяет, когда начальное диапазона равно конечному.
+# Тест 205: Проверяет, когда начальное значение диапазона равно конечному.
 def test_card_number_generator_single_value() -> None:
     """
     Проверяет генерацию, когда start == stop.
@@ -290,3 +290,15 @@ def test_card_number_generator_different_digit_lengths() -> None:
 
     # --- Проверка конца диапазона ---
     assert last_element == "0000 0000 0001 0001"
+
+
+# Тест 208: Проверяет что функция выбрасывает исключение в случае если значение диапазона отрицательное.
+def test_card_number_generator_negative_number_inside_loop() -> None:
+    """
+    Проверяет, что при попытке сгенерировать номер карты
+    для отрицательного числа выбрасывается исключение ValueError
+    с сообщением "Число не может быть отрицательным".
+    """
+    gen = card_number_generator(-1, 3)  # первое число = -1
+    with pytest.raises(ValueError, match="Число не может быть отрицательным"):
+        next(gen)
