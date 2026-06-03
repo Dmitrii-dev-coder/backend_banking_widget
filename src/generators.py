@@ -1,4 +1,9 @@
-def filter_by_currency(transactions, currency):
+from typing import List, Dict, Iterator, Generator
+
+def filter_by_currency(
+    transactions: List[Dict], 
+    currency: str
+) -> Iterator[Dict]:
     """
     Принимает на вход список словарей, представляющих транзакции.
 
@@ -6,7 +11,6 @@ def filter_by_currency(transactions, currency):
     где валюта операции соответствует заданной (например, USD).
 
     """
-
     transactions_in_currency = []
 
     for transaction in transactions:
@@ -16,8 +20,9 @@ def filter_by_currency(transactions, currency):
     return iter(transactions_in_currency)
 
 
-
-def transaction_descriptions(transactions):
+def transaction_descriptions(
+    transactions: List[Dict]
+) -> Generator[str, None, None]:
     """
     Принимает на вход список словарей с транзакциями.
 
@@ -28,8 +33,10 @@ def transaction_descriptions(transactions):
         yield description
 
 
-
-def card_number_generator(start, stop):
+def card_number_generator(
+    start: int, 
+    stop: int
+) -> Generator[str, None, None]:
     """
     Принимает: начальное (start) и конечное (stop) значение карты.
 
@@ -44,37 +51,3 @@ def card_number_generator(start, stop):
         numbers = str(number).zfill(16)
         format_num = f"{numbers[:4]} {numbers[4:8]} {numbers[8:12]} {numbers[12:]}"
         yield format_num
-
-
-if __name__ == '__main__':
-    new_number = card_number_generator(123456788, 123456789)
-
-    print(next(new_number))
-
-    # Проверка работы filter_by_currency.
-
-
-    # Проверка работы transaction_descriptions.
-
-#     descriptions = transaction_descriptions(transactions)
-#     for _ in range(5):
-#         print(next(descriptions))
-#
-#     >>> Перевод организации
-#         Перевод со счета на счет
-#         Перевод со счета на счет
-#         Перевод с карты на карту
-#         Перевод организации
-#
-#     # Проверка работы card_number_generator.
-#
-# for card_number in card_number_generator(1, 5):
-#     print(card_number)
-#
-# >>> 0000 0000 0000 0001
-#     0000 0000 0000 0002
-#     0000 0000 0000 0003
-#     0000 0000 0000 0004
-#     0000 0000 0000 0005
-
-
