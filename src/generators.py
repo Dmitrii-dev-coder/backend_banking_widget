@@ -1,9 +1,7 @@
-from typing import List, Dict, Iterator, Generator
+from typing import Dict, Generator, Iterator, List
 
-def filter_by_currency(
-    transactions: List[Dict], 
-    currency: str
-) -> Iterator[Dict]:
+
+def filter_by_currency(transactions: List[Dict], currency: str) -> Iterator[Dict]:
     """
     Принимает на вход список словарей, представляющих транзакции.
 
@@ -20,9 +18,7 @@ def filter_by_currency(
     return iter(transactions_in_currency)
 
 
-def transaction_descriptions(
-    transactions: List[Dict]
-) -> Generator[str, None, None]:
+def transaction_descriptions(transactions: List[Dict]) -> Generator[str, None, None]:
     """
     Принимает на вход список словарей с транзакциями.
 
@@ -33,10 +29,7 @@ def transaction_descriptions(
         yield description
 
 
-def card_number_generator(
-    start: int, 
-    stop: int
-) -> Generator[str, None, None]:
+def card_number_generator(start: int, stop: int) -> Generator[str, None, None]:
     """
     Принимает: начальное (start) и конечное (stop) значение карты.
 
