@@ -56,7 +56,6 @@ def checking_sort_by_date(my_list: list, descending: bool = True) -> list:
 
 # Примеры использования функций модуля generators.py:
 # 0. filter_by_currency.
-
 transaction = [
     {
         "id": 939719570,
