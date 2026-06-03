@@ -1,6 +1,7 @@
 import itertools
 import json
 import re
+from pathlib import Path
 from typing import Dict, Iterator, List
 
 import pytest
@@ -127,7 +128,8 @@ def test_transaction_descriptions_diff_length_data() -> None:
     assert next(descriptions) == "Перевод со счета на счет"
 
     # Проверка работы функции с длинным списком (100 транзакций в файле transactions.json).
-    with open("test_data\\transactions.json", "r", encoding="utf-8") as f:
+    json_path = Path(__file__).parent / "test_data" / "transactions.json"
+    with open(json_path, "r", encoding="utf-8") as f:
         long_data = json.load(f)
 
     descriptions_generator = transaction_descriptions(long_data)  # сохраняем генератор

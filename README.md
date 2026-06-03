@@ -244,8 +244,8 @@ pytest --cov=src --cov-report=html
 ```
 
 ### Запуск тестов
-```bash
-pytest
+```
+bash pytest
 ```
 
 ## Список всех тестов:
