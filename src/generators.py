@@ -29,11 +29,27 @@ def transaction_descriptions(transactions):
 
 
 
-def card_number_generator():
-    pass
+def card_number_generator(start, stop):
+    """
+    Принимает: начальное (start) и конечное (stop) значение карты.
+
+    Возвращает: номера банковских карт в формате XXXX XXXX XXXX XXXX, где X — цифра номера карты.
+    """
+    if start > stop:
+        raise ValueError("Начальное значение задаваемого диапазона не может быть больше конечного значения диапазона!")
+
+    for number in range(start, stop + 1):
+        if number < 0:
+            raise ValueError("Число не может быть отрицательным")
+        numbers = str(number).zfill(16)
+        format_num = f"{numbers[:4]} {numbers[4:8]} {numbers[8:12]} {numbers[12:]}"
+        yield format_num
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    new_number = card_number_generator(123456788, 123456789)
+
+    print(next(new_number))
 
     # Проверка работы filter_by_currency.
 

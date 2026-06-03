@@ -1,8 +1,11 @@
-import pytest
+import itertools
 import json
+import pytest
+import re
+
 from pathlib import Path
 
-from src.generators import filter_by_currency, transaction_descriptions
+from src.generators import filter_by_currency, transaction_descriptions, card_number_generator
 
 
 # 0. Проверка функции filter_by_currency.
@@ -230,3 +233,118 @@ def test_transaction_descriptions_diff_length_data():
 
 
 # 2. Проверка функции card_number_generator.
+# Тест 201: Проверяет, что генератор выдает правильные номера карт в заданном диапазоне.
+def test_card_number_generator_1_to_5():
+    """
+    Проверяет, что генератор выдает правильные номера карт в заданном диапазоне.
+    Начальное значение (start) = 1.
+    Конечное значение (stop) = 5.
+    """
+    number_generator = card_number_generator(1, 5)
+    assert next(number_generator) == "0000 0000 0000 0001"
+    assert next(number_generator) == "0000 0000 0000 0002"
+    assert next(number_generator) == "0000 0000 0000 0003"
+    assert next(number_generator) == "0000 0000 0000 0004"
+    assert next(number_generator) == "0000 0000 0000 0005"
+
+# Тест 202: Проверяет корректность форматирования номеров карт
+def test_card_number_generator_correct_format():
+    """
+    Проверяет что функция генерирует номера карт в правильном формате: "XXXX XXXX XXXX XXXX" то есть это строка
+    с 16-ю цифрами собранными в группы по четыре, а группы разделены пробелами.
+    """
+
+    # Создаем генератор для небольшого диапазона
+    generator = card_number_generator(1, 5)
+
+    # Регулярное выражение для проверки формата
+    pattern = r'^\d{4} \d{4} \d{4} \d{4}$'
+
+    # Перебираем все значения из генератора и проверяем каждое
+    for card_number in generator:
+        assert re.match(pattern, card_number) is not None, \
+            f"Неверный формат номера: {card_number}"
+
+# Тест 203: Проверяет, что генератор правильно завершает генерацию.
+def test_card_number_generator_correct_stop_generation():
+    """
+    Проверяет, что функция генерирует лишь то количество номеров карт, которое соответствует заданным параметрам.
+    """
+    start = 1
+    stop = 101
+
+    generator = card_number_generator(start, stop)
+    count = 0
+
+    # Итерируемся по генератору.
+    for _ in generator:
+        count += 1
+
+    # Ожидаемое количество элементов: (stop - start + 1)
+    expected_count = stop - start + 1
+
+    if count != expected_count:
+        raise ValueError(f"Неверное количество сгенерированных номеров. Ожидалось: {expected_count}, получено: {count}")
+
+# Тест 204: Проверяет, что генератор корректно обрабатывает крайние значения диапазона.
+def test_card_number_generator_invalid_range():
+    """
+    Проверяет поведение генератора при некорректном диапазоне (start > stop).
+    """
+    with pytest.raises(ValueError) as error_info:
+        generator = card_number_generator(10, 5)
+        # Преобразование в список запустит генератор и вызовет ошибку.
+        result = list(generator)
+
+    # Проверка текста ошибки.
+    assert "не может быть больше конечного" in str(error_info.value)
+
+# Тест 205: Проверяет, когда начальное диапазона равно конечному.
+def test_card_number_generator_single_value():
+    """
+    Проверяет генерацию, когда start == stop.
+    """
+    start = 1234567890123456
+    stop = 1234567890123456
+    expected = ["1234 5678 9012 3456"]
+
+    result = list(card_number_generator(start, stop))
+
+    assert result == expected, f"При start == stop должен быть сгенерирован один номер: {expected}"
+
+# Тест 206: Проверяет генерацию в том случае когда начальное значение равно нулю.
+def test_card_number_generator_start_from_zero():
+    """
+    Проверяет генерацию, начиная с нуля.
+    """
+    start = 0
+    stop = 1
+    expected = ["0000 0000 0000 0000", "0000 0000 0000 0001"]
+
+    result = list(card_number_generator(start, stop))
+
+    assert result == expected, "Генерация с нуля должна работать корректно"
+
+# Тест 207: Проверяет правильность форматирования номера карты если конечное значение больше четырех цифр.
+def test_card_number_generator_different_digit_lengths():
+    """
+    Проверяет корректное форматирование номера карты если stop больше XXXX,
+    используя itertools.islice для быстрой прокрутки генератора.
+    Тестируем на диапазоне от 1 до 10001.
+    """
+    start = 1
+    stop = 10001
+
+    # Создаем генератор
+    generator = card_number_generator(start, stop)
+
+    # --- Проверка начала диапазона ---
+    assert next(generator) == "0000 0000 0000 0001"
+    assert next(generator) == "0000 0000 0000 0002"
+
+    # --- Быстрая прокрутка к концу диапазона ---
+    last_element = next(itertools.islice(generator, 9998, None))
+
+    # --- Проверка конца диапазона ---
+    # Последнее число должно быть отформатировано правильно
+    assert last_element == "0000 0000 0001 0001"
