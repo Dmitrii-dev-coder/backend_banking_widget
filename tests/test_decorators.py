@@ -90,3 +90,26 @@ def test_log_with_exception_console(capsys):
     # Проверяем, что в консоли есть лог об ошибке
     assert "Завершение my_function error: TypeError" in captured.out
     assert "Inputs: ('abc', 5)" in captured.out
+
+# Тест 005: Проверяет, что декоратор корректно обрабатывает неправильные типы данных в именованных аргументах (kwargs).
+def test_log_with_exception_kwargs():
+    """Проверяет, что декоратор логирует исключения при передаче неверных типов в именованных аргументах"""
+    @log(filename="test_kwargs_error.txt")
+    def my_function(x, y=None):
+        return x + y
+
+    # Проверяем, что TypeError возникает при передаче строки в kwargs
+    try:
+        my_function(5, y="abc")
+        assert False, "Должна быть ошибка TypeError"
+    except TypeError as e:
+        assert "Аргумент abc должен быть числом" in str(e)
+
+    # Проверяем, что файл создан с логом ошибки
+    with open("test_kwargs_error.txt", "r", encoding="utf-8") as f:
+        content = f.read()
+        assert "Завершение my_function error: TypeError" in content
+        assert "Inputs: (5,), {'y': 'abc'}" in content
+
+    # Удаляем файл после теста
+    os.remove("test_kwargs_error.txt")
