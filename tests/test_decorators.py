@@ -2,9 +2,7 @@ from src.decorators import log
 import os
 
 # 0. Проверка функции декоратора log.
-# Тест 001: Проверяет, что функция корректно записывает логи в файл если указано имя файла или выводит логи работы
-# функции в консоль.
-
+# Тест 001: Проверяет, что функция корректно записывает логи в файл если указано имя файла.
 def test_log():
     @log(filename="test_log.txt")
     def my_function(x, y):
@@ -41,9 +39,9 @@ def test_log_to_console(capsys):
     # Проверяем, что в консоли есть логи
     assert "Запуск my_function" in captured.out
     assert "Завершение my_function c результатом: 8 в" in captured.out
-    # Проверяем формат времени HH:MM:SS
+    # Проверяем формат времени HH:MM:SS.ffffff (микросекунды)
     import re
-    time_pattern = r'\d{2}:\d{2}:\d{2}'
+    time_pattern = r'\d{2}:\d{2}:\d{2}\.\d{6}'
     assert re.search(time_pattern, captured.out) is not None
 
 # Тест 003: Проверяет, что декоратор корректно: обрабатывает неправильные типы данных переданных в функцию;
