@@ -1,5 +1,7 @@
 from src.decorators import log
+import pytest
 import os
+import re
 
 # 0. Проверка функции декоратора log.
 # Тест 001: Проверяет, что функция корректно записывает логи в файл если указано имя файла.
@@ -40,9 +42,8 @@ def test_log_to_console(capsys):
     assert "Запуск my_function" in captured.out
     assert "Завершение my_function c результатом: 8 в" in captured.out
     # Проверяем формат времени HH:MM:SS.ffffff (микросекунды)
-    import re
     time_pattern = r'\d{2}:\d{2}:\d{2}\.\d{6}'
-    assert re.search(time_pattern, captured.out) is not None
+    assert re.search(time_pattern, captured.out)
 
 # Тест 003: Проверяет, что декоратор корректно: обрабатывает неправильные типы данных переданных в функцию;
 # и логирует их.
@@ -97,11 +98,14 @@ def test_log_with_exception_kwargs():
         return x + y
 
     # Проверяем, что TypeError возникает при передаче строки в kwargs
-    try:
+    # try:
+    #     my_function(5, y="abc")
+    #     assert False, "Должна быть ошибка TypeError"
+    # except TypeError as e:
+    #     assert "Аргумент abc должен быть числом" in str(e)
+    with pytest.raises(TypeError) as exc_info:
         my_function(5, y="abc")
-        assert False, "Должна быть ошибка TypeError"
-    except TypeError as e:
-        assert "Аргумент abc должен быть числом" in str(e)
+    assert "Аргумент abc должен быть числом" in str(exc_info.value)
 
     # Проверяем, что файл создан с логом ошибки
     with open("test_kwargs_error.txt", "r", encoding="utf-8") as f:
@@ -111,3 +115,4 @@ def test_log_with_exception_kwargs():
 
     # Удаляем файл после теста
     os.remove("test_kwargs_error.txt")
+
