@@ -1,6 +1,7 @@
 # Импорт функция из модулей masks.py и widget.py
 from typing import Dict, Generator, Iterator, List
 
+from src.decorators import log
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 from src.masks import get_mask_account, get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
@@ -153,7 +154,6 @@ def checking_log_to_file() -> None:
     Пример использования декоратора log с записью в файл.
     Декоратор логирует время запуска/завершения работы функции с микросекундами.
     """
-    from src.decorators import log
 
     @log(filename="test_log_example.txt")
     def my_function(x: (int, float), y: (int, float)) -> (int, float):
@@ -168,7 +168,6 @@ def checking_log_to_console() -> None:
     Пример использования декоратора log с выводом в консоль.
     Декоратор логирует время запуска/завершения работы функции с микросекундами.
     """
-    from src.decorators import log
 
     @log()
     def my_function(x: (int, float), y: (int, float)) -> (int, float):

@@ -1,11 +1,16 @@
-from src.decorators import log
-import pytest
 import os
 import re
+
+import pytest
+
+from src.decorators import log
+
 
 # 0. Проверка функции декоратора log.
 # Тест 001: Проверяет, что функция корректно записывает логи в файл если указано имя файла.
 def test_log():
+    """Проверяет, что функция корректно записывает логи в файл если задана опция filename"""
+
     @log(filename="test_log.txt")
     def my_function(x, y):
         return x + y
@@ -25,9 +30,11 @@ def test_log():
     # Удаляем файл после теста
     os.remove("test_log.txt")
 
+
 # Тест 002: Проверяет вывод логов в консоль при отсутствии имени файла.
 def test_log_to_console(capsys):
     """Проверяет вывод логов в консоль, когда filename не указан"""
+
     @log()  # Нет filename - логи идут в консоль
     def my_function(x, y):
         return x + y
@@ -37,18 +44,20 @@ def test_log_to_console(capsys):
 
     # Перехватываем вывод консоли
     captured = capsys.readouterr()
-    
+
     # Проверяем, что в консоли есть логи
     assert "Запуск my_function" in captured.out
     assert "Завершение my_function c результатом: 8 в" in captured.out
     # Проверяем формат времени HH:MM:SS.ffffff (микросекунды)
-    time_pattern = r'\d{2}:\d{2}:\d{2}\.\d{6}'
+    time_pattern = r"\d{2}:\d{2}:\d{2}\.\d{6}"
     assert re.search(time_pattern, captured.out)
+
 
 # Тест 003: Проверяет, что декоратор корректно: обрабатывает неправильные типы данных переданных в функцию;
 # и логирует их.
 def test_log_with_exception():
     """Проверяет, что декоратор логирует исключения при передаче неверных типов аргументов"""
+
     @log(filename="test_error.txt")
     def my_function(x, y):
         return x + y
@@ -69,9 +78,11 @@ def test_log_with_exception():
     # Удаляем файл после теста
     os.remove("test_error.txt")
 
+
 # Тест 004: Проверяет правильность логирования декоратором в случае ошибки если не указано имя файла.
 def test_log_with_exception_console(capsys):
     """Проверяет, что декоратор логирует исключения в консоль при отсутствии filename"""
+
     @log()  # Нет filename - логи идут в консоль
     def my_function(x, y):
         return x + y
@@ -85,24 +96,20 @@ def test_log_with_exception_console(capsys):
 
     # Перехватываем вывод консоли
     captured = capsys.readouterr()
-    
+
     # Проверяем, что в консоли есть лог об ошибке
     assert "Завершение my_function error: TypeError" in captured.out
     assert "Inputs: ('abc', 5)" in captured.out
 
+
 # Тест 005: Проверяет, что декоратор корректно обрабатывает неправильные типы данных в именованных аргументах (kwargs).
 def test_log_with_exception_kwargs():
     """Проверяет, что декоратор логирует исключения при передаче неверных типов в именованных аргументах"""
+
     @log(filename="test_kwargs_error.txt")
     def my_function(x, y=None):
         return x + y
 
-    # Проверяем, что TypeError возникает при передаче строки в kwargs
-    # try:
-    #     my_function(5, y="abc")
-    #     assert False, "Должна быть ошибка TypeError"
-    # except TypeError as e:
-    #     assert "Аргумент abc должен быть числом" in str(e)
     with pytest.raises(TypeError) as exc_info:
         my_function(5, y="abc")
     assert "Аргумент abc должен быть числом" in str(exc_info.value)
@@ -115,4 +122,3 @@ def test_log_with_exception_kwargs():
 
     # Удаляем файл после теста
     os.remove("test_kwargs_error.txt")
-
