@@ -135,7 +135,7 @@ def checking_transaction_descriptions(transactions: List[Dict]) -> Generator[str
 # 2. card_number_generator.
 def checking_card_number_generator(start: int, stop: int) -> Generator[str, None, None]:
     """
-    Пример использования функции transaction_descriptions.
+    Пример использования функции card_number_generator.
     Принимает:
         start - начальное значение диапазона;
         stop - конечное значение диапазона.
@@ -145,6 +145,37 @@ def checking_card_number_generator(start: int, stop: int) -> Generator[str, None
     number_generator = card_number_generator(start, stop)
 
     return number_generator
+
+
+# 3. decorators - log.
+def checking_log_to_file() -> None:
+    """
+    Пример использования декоратора log с записью в файл.
+    Декоратор логирует время запуска/завершения работы функции с микросекундами.
+    """
+    from src.decorators import log
+
+    @log(filename="test_log_example.txt")
+    def my_function(x: (int, float), y: (int, float)) -> (int, float):
+        return x + y
+
+    result = my_function(5, 7)
+    return result
+
+
+def checking_log_to_console() -> None:
+    """
+    Пример использования декоратора log с выводом в консоль.
+    Декоратор логирует время запуска/завершения работы функции с микросекундами.
+    """
+    from src.decorators import log
+
+    @log()
+    def my_function(x: (int, float), y: (int, float)) -> (int, float):
+        return x * y
+
+    result = my_function(3, 4)
+    return result
 
 
 # Запуск функций из модулей
@@ -264,4 +295,26 @@ for card_number in checking_card_number_generator(1, 5):
 0000 0000 0000 0003
 0000 0000 0000 0004
 0000 0000 0000 0005
+"""
+
+# 3. log.
+print("\nДекоратор log с записью в файл:")
+print(checking_log_to_file())
+
+# Сверка результата:
+"""
+Декоратор log с записью в файл:
+Запуск my_function в 12:47:04.127582
+12
+"""
+
+print("\nДекоратор log с выводом в консоль:")
+print(checking_log_to_console())
+
+# Сверка результата:
+"""
+Декоратор log с выводом в консоль:
+Запуск my_function в 12:47:04.128235
+Завершение my_function c результатом: 12 в 12:47:04.128252.
+12
 """
