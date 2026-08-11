@@ -1,6 +1,6 @@
 import json
 
-def get_transactions_from_file(path_file):
+def get_transactions_from_file(file_path):
     """
     Получает транзакции из файла в JSON формате.
     Принимает: path_file - путь к файлу.
@@ -8,10 +8,14 @@ def get_transactions_from_file(path_file):
     Если файл пустой, содержит не список или не найден, функция возвращает пустой список.
     """
 
-    with open(f'{path_file}/transactions.json', 'r', encoding='utf-8') as transactions_file:
+    with open(file_path, 'r', encoding='utf-8') as operations_file:
         try:
-            transactions = json.loads(transactions_file)
+            transactions = json.loads('operations_file')
         except json.JSONDecodeError:
             transactions = []
 
     return transactions
+
+if __name__ == "__main__":
+    result = get_transactions_from_file('data/operations.json')
+    print(result)
