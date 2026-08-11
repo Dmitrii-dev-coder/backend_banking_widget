@@ -1,5 +1,6 @@
 # Проверка функции get_transactions_from_file.
-from unittest.mock import Mock
+from unittest.mock import Mock, patch, mock_open
+
 from src.utils import get_transactions_from_file
 
 
@@ -16,15 +17,23 @@ def test_get_transactions_from_file_positive():
 
 # Тест 002: Проверка, что при не существующем пути возвращается пустой список.
 def test_get_transactions_from_file_invalid_path():
-    """ """
+    """Передает не существующий путь к файлу и проверяет, что возвращается пустой. """
     result = get_transactions_from_file("data/transactions.json")
     assert result == []
 
 # Тест 003: Проверка функции, что при передаче ей пустого файла она возвращает пустой список.
 def test_get_transactions_from_file_empty():
-    """ """
-    mock_file = Mock(return_value="[]")  # Пустой файл, содержит"[]"
-    assert get_transactions_from_file(mock_file) == []
+    """Передаете пустой файл и получаете пустой список."""
+    with patch("builtins.open", mock_open(read_data="")):
+        result = get_transactions_from_file("data/fake.json")
+        assert result == []
+
+# Тест 004: Проверка на файл с не валидным JSON.
+def test_get_transactions_from_file_invalid_json():
+    """Тест на чтение файла с невалидным JSON."""
+    with patch("builtins.open", mock_open(read_data="invalid json")):
+        result = get_transactions_from_file("data/fake.json")
+        assert result == []
 
 
 
