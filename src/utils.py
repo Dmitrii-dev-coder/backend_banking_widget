@@ -15,7 +15,7 @@ def get_transactions_from_file(file_path: str) -> list[dict[str, Any]]:
         функция возвращает пустой список.
     """
     try:
-        with open(file_path, 'r', encoding='utf-8') as operations_file:
+        with open(file_path, "r", encoding="utf-8") as operations_file:
             try:
                 transactions = json.loads(operations_file.read())
                 if not isinstance(transactions, list):

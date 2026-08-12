@@ -4,7 +4,6 @@ from typing import Any
 import requests
 from dotenv import load_dotenv
 
-
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
@@ -26,6 +25,8 @@ def get_sum_of_transaction(transaction: dict[str, Any]) -> float:
         exchange_to = "RUB"
         exchange_from = transaction["operationAmount"]["currency"]["code"]
         transaction_amount = float(transaction["operationAmount"]["amount"])
+        if API_KEY is None:
+            raise ValueError("API_KEY not found in environment variables")
         headers = {"apikey": API_KEY}
         url = (
             f"https://api.apilayer.com/exchangerates_data/convert"
@@ -34,7 +35,7 @@ def get_sum_of_transaction(transaction: dict[str, Any]) -> float:
         response = requests.get(url, headers=headers)
         if response.status_code != 200:
             raise ValueError("Failed to get currency rate")
-        return response.json()["result"]
+        return float(response.json()["result"])
 
     transaction_amount = float(transaction["operationAmount"]["amount"])
     return transaction_amount
