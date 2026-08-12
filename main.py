@@ -1,9 +1,12 @@
 # Импорт функция из модулей masks.py и widget.py
-from typing import Dict, Generator, Iterator, List
+from typing import Any, Dict, Generator, Iterator, List
 
+from src.decorators import log
+from src.external_api import get_sum_of_transaction
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 from src.masks import get_mask_account, get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
+from src.utils import get_transactions_from_file
 from src.widget import get_date, mask_account_card
 
 
@@ -135,7 +138,7 @@ def checking_transaction_descriptions(transactions: List[Dict]) -> Generator[str
 # 2. card_number_generator.
 def checking_card_number_generator(start: int, stop: int) -> Generator[str, None, None]:
     """
-    Пример использования функции transaction_descriptions.
+    Пример использования функции card_number_generator.
     Принимает:
         start - начальное значение диапазона;
         stop - конечное значение диапазона.
@@ -145,6 +148,63 @@ def checking_card_number_generator(start: int, stop: int) -> Generator[str, None
     number_generator = card_number_generator(start, stop)
 
     return number_generator
+
+
+# 3. decorators - log.
+def checking_log_to_file() -> None:
+    """
+    Пример использования декоратора log с записью в файл.
+    Декоратор логирует время запуска/завершения работы функции с микросекундами.
+    """
+
+    @log(filename="test_log_example.txt")
+    def my_function(x: Any, y: Any) -> Any:
+        return x + y
+
+    _ = my_function(5, 7)
+
+
+def checking_log_to_console() -> None:
+    """
+    Пример использования декоратора log с выводом в консоль.
+    Декоратор логирует время запуска/завершения работы функции с микросекундами.
+    """
+
+    @log()
+    def my_function(x: Any, y: Any) -> Any:
+        return x * y
+
+    _ = my_function(3, 4)
+
+
+# Пример использования функции модуля utils.py:
+# 0. get_transactions_from_file.
+
+
+def checking_get_transactions_from_file(file_path: str) -> list[dict[str, Any]]:
+    """
+    Пример использования функции get_transactions_from_file из модуля utils.py с выводом в консоль.
+
+    Получает транзакции из файла в JSON формате.
+    """
+    result = get_transactions_from_file(file_path)
+
+    return result
+
+
+# Пример использования функции модуля external_api.py:
+# 0. get_sum_of_transaction.
+
+
+def checking_get_sum_of_transaction(transaction: dict[str, Any]) -> float:
+    """
+    Пример использования функции get_sum_of_transaction из модуля external_api.py с выводом в консоль.
+
+    Считает сумму транзакции в рублях.
+    """
+    result = get_sum_of_transaction(transaction)
+
+    return result
 
 
 # Запуск функций из модулей
@@ -235,33 +295,89 @@ if __name__ == "__main__":
     }
     """
 
-# 1. transaction_descriptions.
-result_descriptions = checking_transaction_descriptions(transaction)
-try:
-    for _ in range(5):
-        print(next(result_descriptions))
-except StopIteration:
-    print("Итератор исчерпан.")
+    # 1. transaction_descriptions.
+    result_descriptions = checking_transaction_descriptions(transaction)
+    try:
+        for _ in range(5):
+            print(next(result_descriptions))
+    except StopIteration:
+        print("Итератор исчерпан.")
 
-# Сверка результат:
-"""
-"Перевод организации",
-"Перевод со счета на счет",
-"Перевод со счета на счет",
-"Перевод с карты на карту",
-"Перевод организации"
-"""
+    # Сверка результат:
+    """
+    "Перевод организации",
+    "Перевод со счета на счет",
+    "Перевод со счета на счет",
+    "Перевод с карты на карту",
+    "Перевод организации"
+    """
 
-# 2. card_number_generator.
+    # 2. card_number_generator.
 
-for card_number in checking_card_number_generator(1, 5):
-    print(card_number)
+    for card_number in checking_card_number_generator(1, 5):
+        print(card_number)
 
-# Сверка результат:
-"""
-0000 0000 0000 0001
-0000 0000 0000 0002
-0000 0000 0000 0003
-0000 0000 0000 0004
-0000 0000 0000 0005
-"""
+    # Сверка результат:
+    """
+    0000 0000 0000 0001
+    0000 0000 0000 0002
+    0000 0000 0000 0003
+    0000 0000 0000 0004
+    0000 0000 0000 0005
+    """
+
+    # 3. log.
+    print("\nДекоратор log с записью в файл:")
+    checking_log_to_file()
+
+    # Сверка результата:
+    """
+    Декоратор log с записью в файл:
+    Запуск my_function в 12:47:04.127582
+    12
+    """
+
+    print("\nДекоратор log с выводом в консоль:")
+    checking_log_to_console()
+
+    # Сверка результата:
+    """
+    Декоратор log с выводом в консоль:
+    Запуск my_function в 12:47:04.128235
+    Завершение my_function c результатом: 12 в 12:47:04.128252.
+    12
+    """
+
+    # Запуск функции get_transactions_from_file из модуля utils.py.
+    print("\nВывод списка транзакций из файла в консоль:")
+    print(checking_get_transactions_from_file("data/operations.json"))
+
+    # Сверка результата:
+    """
+    Вывод списка транзакций из файла в консоль:
+    [{'id': 441945886, 'state': 'EXECUTED', 'date': '2019-08-26T10:50:58.294041',
+    'operationAmount': {'amount': '31957.58', 'currency': {'name': 'руб.', 'code': 'RUB'}},
+    'description': 'Перевод организации', 'from': 'Maestro 1596837868705199',
+    'to': 'Счет 64686473678894779589'},
+    {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364',
+    ... (список обрезан для краткости) ...    ]
+    """
+
+    # Запуск функции get_sum_of_transaction из модуля external_api.py.
+    print("\nВывод суммы выбранной транзакций из файла в рублях:")
+    single_transaction = {
+        "id": 214024827,
+        "state": "EXECUTED",
+        "date": "2018-12-20T16:43:26.929246",
+        "operationAmount": {"amount": "70946.18", "currency": {"name": "USD", "code": "USD"}},
+        "description": "Перевод организации",
+        "from": "Счет 10848359769870775355",
+        "to": "Счет 21969751544412966366",
+    }
+    print(checking_get_sum_of_transaction(single_transaction))
+
+    # Сверка результата:
+    """
+    Вывод суммы выбранной транзакций из файла в рублях:
+    5849382.922329 # По курсу на 12.08.2026
+    """
