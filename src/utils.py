@@ -26,8 +26,3 @@ def get_transactions_from_file(file_path: str) -> list[dict[str, Any]]:
         return []
 
     return transactions
-
-
-if __name__ == "__main__":
-    result = get_transactions_from_file('data/operations.json')
-    print(result)

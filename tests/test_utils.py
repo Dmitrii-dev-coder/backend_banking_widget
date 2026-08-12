@@ -37,3 +37,12 @@ def test_get_transactions_from_file_invalid_json() -> None:
     with patch("builtins.open", mock_open(read_data="invalid json")):
         result = get_transactions_from_file("data/fake.json")
         assert result == []
+
+
+# Тест 005: Проверка, что функция, принимая JSON-файл в котором валидный JSON, но не список а например -
+# {"key": "value"}, возвращает пустой список.
+def test_get_transactions_from_file_not_list() -> None:
+    """ Тест на чтение файла с валидным JSON но не списком."""
+    with patch("builtins.open", mock_open(read_data='{"key": "value"}')):
+        result = get_transactions_from_file("data/fake.json")
+        assert result == []
