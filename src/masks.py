@@ -1,3 +1,7 @@
+from src.logger import setup_logger
+
+logger = setup_logger('masks', 'logs/masks.log')
+
 def get_mask_card_number(card_number: str | int) -> str:
     """Функция принимает на вход номер карты и возвращает его замаскированным."""
 
