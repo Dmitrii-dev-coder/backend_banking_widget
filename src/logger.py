@@ -16,10 +16,6 @@ def setup_logger(name: str, log_file: str, level: int = logging.DEBUG) -> loggin
     file_handler.setFormatter(formatter_file)
     logger.addHandler(file_handler)
 
-    # Console Handler
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-    console_handler.setFormatter(formatter_console)
-    logger.addHandler(console_handler)
+    logger.propagate = False
 
     return logger

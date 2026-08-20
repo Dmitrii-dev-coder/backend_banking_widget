@@ -4,6 +4,7 @@ logger = setup_logger('masks', 'logs/masks.log')
 
 def get_mask_card_number(card_number: str | int) -> str:
     """Функция принимает на вход номер карты и возвращает его замаскированным."""
+    logger.debug("Функция генерации маски запущена")
 
     # Превращаем номер карты в строку, если пришло число
     card_number_str = str(card_number)
@@ -14,17 +15,22 @@ def get_mask_card_number(card_number: str | int) -> str:
     # Проверяем что номер карты содержит только цифры
     if not card_number_str.isdigit():
         raise ValueError("Номер карты должен содержать 16 цифр и никаких других символов")
+    logger.error(f"Номер карты содержит не только цифры: {card_number_str}")
 
     # Проверяем длину номера карты
     if len(card_number_str) != 16:
         raise ValueError("Номер карты должен содержать 16 цифр и никаких других символов")
+    logger.error(f"Не совпадает количество цифр в номере карты. Проверьте, пожалуйста, ввод: {card_number_str}")
 
     # Проверяем на эффект залипания клавиши
     if len(set(card_number_str)) == 1:
         raise ValueError("Номер карты содержит только одинаковые цифры (эффект залипания клавиши).")
+    logger.error("Номер карты содержит только одинаковые цифры (эффект залипания клавиши)")
 
     # Вставление пробела после каждых четыре знака
     card_mask = f"{card_number_str[:4]} {card_number_str[4:6]}** **** {card_number_str[12:]}"
+    logger.debug(f"Маска карты успешно сгенерирована: {card_mask}")
+    logger.debug("Функция генерации маски карты завершена")
 
     return card_mask
 
