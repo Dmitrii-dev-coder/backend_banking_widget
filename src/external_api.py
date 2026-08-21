@@ -4,9 +4,12 @@ from typing import Any
 import requests
 from dotenv import load_dotenv
 
+from src.logger import setup_logger
+
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
+logger = setup_logger(__name__, "logs/external_api.log")
 
 def get_sum_of_transaction(transaction: dict[str, Any]) -> float:
     """
@@ -22,11 +25,13 @@ def get_sum_of_transaction(transaction: dict[str, Any]) -> float:
     для получения текущего курса валюты и конвертации суммы операции в рубли.
     """
     if transaction["operationAmount"]["currency"]["code"] != "RUB":
+        if API_KEY is None:
+            logger.error("API_KEY не найден в переменных окружения")
+            raise ValueError("API_KEY не найден в переменных окружения")
+
         exchange_to = "RUB"
         exchange_from = transaction["operationAmount"]["currency"]["code"]
         transaction_amount = float(transaction["operationAmount"]["amount"])
-        if API_KEY is None:
-            raise ValueError("API_KEY not found in environment variables")
         headers = {"apikey": API_KEY}
         url = (
             f"https://api.apilayer.com/exchangerates_data/convert"
