@@ -11,6 +11,7 @@ API_KEY = os.getenv("API_KEY")
 
 logger = setup_logger(__name__, "logs/external_api.log")
 
+
 def get_sum_of_transaction(transaction: dict[str, Any]) -> float:
     """
     Считает сумму транзакции в рублях.
