@@ -215,3 +215,10 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 scripts/
+
+# Логи проекта
+logs/
+test_log_example.txt
+
+# Локальные инструкции ассистента
+.gigacode/

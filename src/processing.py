@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 def filter_by_state(my_list_dict: list, state: str = "EXECUTED") -> list:
     """Функция filter_by_state, которая принимает список словарей и опционально значение для ключа state (по умолчанию
     'EXECUTED'). Функция возвращает новый список словарей, содержащий только те словари, у которых ключ state
@@ -38,13 +39,9 @@ def sort_by_date(my_list_dir: list, descending: bool = True) -> list:
         date_str = item["date"]
         try:
             datetime.fromisoformat(date_str)
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             raise ValueError(error_text)
 
     # После успешной проверки выполняем сортировку по преобразованной дате.
-    sorted_list = sorted(
-        my_list_dir,
-        key=lambda emp: datetime.fromisoformat(emp["date"]),
-        reverse=descending
-    )
+    sorted_list = sorted(my_list_dir, key=lambda emp: datetime.fromisoformat(emp["date"]), reverse=descending)
     return sorted_list
