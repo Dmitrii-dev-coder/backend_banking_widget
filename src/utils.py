@@ -3,7 +3,8 @@ from typing import Any
 
 from src.logger import setup_logger
 
-logger = setup_logger('utils', 'logs/utils.log')
+logger = setup_logger("utils", "logs/utils.log")
+
 
 def get_transactions_from_file(file_path: str) -> list[dict[str, Any]]:
     """

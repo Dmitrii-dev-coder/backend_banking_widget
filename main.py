@@ -11,7 +11,7 @@ from src.widget import get_date, mask_account_card
 
 # ============================= ФУНУКЦИИ - ОБЁРТКИ ДЛЯ ВЫЗОВА ФУНКЦИЙ МОДУЛЕЙ =====================
 # 0. Модуль masks:
-# 0.1 Функция для запуска маскировки номера карты: get_mask_card_number.
+# 0.1 Функция get_mask_card_number.
 def run_mask_card_number(card_number: str) -> str:
     """
     Обёртка для функции get_mask_card_number из модуля masks.
@@ -25,7 +25,7 @@ def run_mask_card_number(card_number: str) -> str:
     return masked_card
 
 
-# 0.2 Функция для запуска маскировки номера карты: get_mask_account.
+# 0.2 Функция get_mask_account.
 def run_mask_account(account_number: str) -> str:
     """
     Обёртка для функции get_mask_account из модуля masks.
@@ -40,7 +40,7 @@ def run_mask_account(account_number: str) -> str:
 
 
 # 1. Модуль widget:
-# 1.1 Функция запуска маскировки полученного номера карты или счёта: mask_account_card.
+# 1.1 Функция mask_account_card.
 def run_mask_account_card(account_card: str) -> str:
     """
     Обёртка для функции mask_account_card из модуля widget.
@@ -54,7 +54,7 @@ def run_mask_account_card(account_card: str) -> str:
     return hidden_account_card
 
 
-# 1.2 Функция запуска извлечения даты из междунарного стандарта написания даты и времени: get_date.
+# 1.2 Функция get_date.
 def run_get_date(date_iso_8601: str) -> str:
     """
     Обёртка для функции get_date из модуля widget.
@@ -69,7 +69,7 @@ def run_get_date(date_iso_8601: str) -> str:
 
 
 # 2. Модуль processing:
-# 2.1 Функция запуска фильтрации данных: filter_by_state.
+# 2.1 Функция filter_by_state.
 def run_filter_by_state(my_list: list, state: str = "EXECUTED") -> list:
     """
     Обёртка для функции filter_by_state из модуля processing.
@@ -84,7 +84,7 @@ def run_filter_by_state(my_list: list, state: str = "EXECUTED") -> list:
     return filtered_list
 
 
-# 2.2 Функция запуска сортирования по дате: sort_by_date.
+# 2.2 Функция sort_by_date.
 def run_sort_by_date(my_list: list, descending: bool = True) -> list:
     """
     Обёртка для функции sort_by_date из модуля processing.
@@ -100,7 +100,7 @@ def run_sort_by_date(my_list: list, descending: bool = True) -> list:
 
 
 # 3. Модуль generators:
-# 3.1 Функция запуска фильтрации транзакций по валюте: filter_by_currency.
+# 3.1 Функция filter_by_currency.
 def run_filter_by_currency(transaction_list: List[Dict], currency: str) -> Iterator[Dict]:
     """
     Обёртка для функции filter_by_currency из модуля generators.
@@ -115,7 +115,7 @@ def run_filter_by_currency(transaction_list: List[Dict], currency: str) -> Itera
     return usd_transactions
 
 
-# 3.2 Функция запуска вывода описания транзакции: transaction_descriptions.
+# 3.2 Функция transaction_descriptions.
 def run_transaction_descriptions(transactions: List[Dict]) -> Generator[str, None, None]:
     """
     Обёртка для функции transaction_descriptions из модуля generators.
@@ -129,7 +129,7 @@ def run_transaction_descriptions(transactions: List[Dict]) -> Generator[str, Non
     return descriptions
 
 
-# 3.3 Функция запуска генерации номеров карт в заданном количестве: card_number_generator.
+# 3.3 Функция card_number_generator.
 def run_card_number_generator(start: int, stop: int) -> Generator[str, None, None]:
     """
     Обёртка для функции card_number_generator из модуля generators.
@@ -145,7 +145,7 @@ def run_card_number_generator(start: int, stop: int) -> Generator[str, None, Non
 
 
 # 4. Модуль decorators:
-# 4.1 Функция запуска декоратора для записи логов в файл с помощью: log.
+# 4.1 Функция log.
 def run_log_to_file() -> None:
     """
     Обёртка для демонстрации работы декоратора log с записью в файл.
@@ -158,7 +158,7 @@ def run_log_to_file() -> None:
 
     _ = my_function(5, 7)
 
-# 4.2 Функция запуска декоратора для записи логов в консоль с помощью: log.
+# 4.2 Функция log.
 def run_log_to_console() -> None:
     """
     Обёртка для демонстрации работы декоратора log с выводом в консоль.
@@ -173,7 +173,7 @@ def run_log_to_console() -> None:
 
 
 # 5. Модуль utils:
-# 5.1 Функция запуска получения транзакций из файла с помощью функции: get_transactions_from_file.
+# 5.1 Функция get_transactions_from_file.
 def run_get_transactions_from_file(file_path: str) -> list[dict[str, Any]]:
     """
     Обёртка для функции get_transactions_from_file из модуля utils.
@@ -188,7 +188,7 @@ def run_get_transactions_from_file(file_path: str) -> list[dict[str, Any]]:
 
 
 # 6. Модуль external_api:
-# 6.1 Функция запуска получения суммы транзакции с помощью: get_sum_of_transaction.
+# 6.1 Функция get_sum_of_transaction.
 
 
 def run_get_sum_of_transaction(transaction: dict[str, Any]) -> float:
