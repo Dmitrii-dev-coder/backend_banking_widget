@@ -1,5 +1,6 @@
 from pathlib import Path
-from unittest.mock import mock_open, patch
+from typing import Any
+from unittest.mock import mock_open, patch, MagicMock
 
 import pandas as pd
 
@@ -109,7 +110,7 @@ def test_get_transactions_from_excel_file_empty() -> None:
 
 # Тест 104: Проверка функции на excel-файл с не валидным данными (данные в строке неполные, в ячейке NaN).
 @patch("src.readers.pd.read_excel")
-def test_get_transactions_from_excel_file_with_nan(mock_read_excel) -> None:
+def test_get_transactions_from_excel_file_with_nan(mock_read_excel: MagicMock) -> None:
     """Передает Excel с пустыми ячейками и проверяет обработку."""
     # 1. Создаем DataFrame с пустой ячейкой (float('nan'))
     df_with_nan = pd.DataFrame({"id": [1.0, float("nan")], "state": ["EXECUTED", "CANCELED"]})  # Вторая строка пустая
@@ -129,7 +130,7 @@ def test_get_transactions_from_excel_file_with_nan(mock_read_excel) -> None:
 
 # Тест 105: Проверка функции на excel-файл с неправильно именованными столбцами.
 @patch("src.readers.pd.read_excel")
-def test_get_transactions_from_excel_file_wrong_columns(mock_read_excel) -> None:
+def test_get_transactions_from_excel_file_wrong_columns(mock_read_excel: MagicMock) -> None:
     """Передает Excel с невалидными именами столбцов и проверяет обработку."""
     # Создаем DataFrame с совершенно другими именами столбцов
     df_wrong = pd.DataFrame({"weird_col_1": [1, 2], "weird_col_2": ["Data", "Data"]})
@@ -150,7 +151,7 @@ def test_get_transactions_from_excel_file_wrong_columns(mock_read_excel) -> None
 # Тест 106: Проверка функции, что она возвращает корректные данные (Например, проверь, что id транзакции и
 # сумма совпадают).
 @patch("src.readers.pd.read_excel")
-def test_get_transactions_from_excel_file_verify_data(mock_read_excel) -> None:
+def test_get_transactions_from_excel_file_verify_data(mock_read_excel: MagicMock) -> None:
     """Передает Excel с корректными данными и проверяет, что id и amount совпадают."""
     # 1. Создаем DataFrame с корректными данными
     df_correct = pd.DataFrame({"id": [100, 200], "state": ["EXECUTED", "CANCELED"], "amount": [5000.0, 15000.0]})
@@ -174,7 +175,7 @@ def test_get_transactions_from_excel_file_verify_data(mock_read_excel) -> None:
 
 # Тест 107: Проверка функции, что при отсутствии данных в Excel-файле (пустая структура) она возвращает пустой список.
 @patch("src.readers.pd.read_excel")
-def test_get_transactions_from_excel_file_empty_data(mock_read_excel) -> None:
+def test_get_transactions_from_excel_file_empty_data(mock_read_excel: MagicMock) -> None:
     """Симулирует ошибку pd.errors.EmptyDataError и проверяет, что возвращается пустой список."""
     mock_read_excel.side_effect = pd.errors.EmptyDataError("Excel file is empty")
     result = get_transactions_from_excel_file(str(test_data_dir / "empty_data.xlsx"))

@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Hashable
 
 import numpy as np
 import pandas as pd
@@ -8,7 +8,7 @@ from src.logger import setup_logger
 logger = setup_logger("readers", "logs/readers.log")
 
 
-def get_transactions_from_csv_file(file_path: str) -> list[dict[str, Any]]:
+def get_transactions_from_csv_file(file_path: str) -> list[dict[Hashable, Any]]:
     """
      Получает транзакции из csv-файла.
 
@@ -39,7 +39,7 @@ def get_transactions_from_csv_file(file_path: str) -> list[dict[str, Any]]:
         return []
 
 
-def get_transactions_from_excel_file(file_path: str) -> list[dict[str, Any]]:
+def get_transactions_from_excel_file(file_path: str) -> list[dict[Hashable, Any]]:
     """
     Получает транзакции из excel-файла.
 

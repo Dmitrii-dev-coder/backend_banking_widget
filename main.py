@@ -1,5 +1,5 @@
 # ============================= ИМПОРТ ФУНКЦИЙ И МОДУЛЕЙ ПРОЕКТА ==============================
-from typing import Any, Dict, Generator, Iterator, List
+from typing import Any, Dict, Generator, Hashable, Iterator, List
 
 import pandas as pd
 
@@ -209,7 +209,7 @@ def run_get_sum_of_transaction(transaction: dict[str, Any]) -> float:
 
 # 7. Модуль readers:
 # 7.1 Функция get_transactions_from_csv_file.
-def run_get_transactions_from_csv_file(file_path: str) -> list[dict[str, Any]]:
+def run_get_transactions_from_csv_file(file_path: str) -> list[dict[Hashable, Any]]:
     """
     Обёртка для функции get_transactions_from_csv_file из модуля readers.
     Принимает:
@@ -223,7 +223,7 @@ def run_get_transactions_from_csv_file(file_path: str) -> list[dict[str, Any]]:
 
 
 # 7.2 Функция get_transactions_from_excel_file.
-def run_get_transactions_from_excel_file(file_path: str) -> list[dict[str, Any]]:
+def run_get_transactions_from_excel_file(file_path: str) -> list[dict[Hashable, Any]]:
     """
     Обёртка для функции get_transactions_from_excel_file из модуля readers.
     Принимает:

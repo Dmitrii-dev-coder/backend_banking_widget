@@ -1,5 +1,6 @@
 import os
 import re
+from typing import Any
 
 import pytest
 
@@ -8,11 +9,11 @@ from src.decorators import log
 
 # 0. Проверка функции декоратора log.
 # Тест 001: Проверяет, что функция корректно записывает логи в файл если указано имя файла.
-def test_log():
+def test_log() -> None:
     """Проверяет, что функция корректно записывает логи в файл если задана опция filename"""
 
     @log(filename="test_log.txt")
-    def my_function(x, y):
+    def my_function(x: int, y: int) -> int:
         return x + y
 
     result = my_function(1, 2)
@@ -32,11 +33,11 @@ def test_log():
 
 
 # Тест 002: Проверяет вывод логов в консоль при отсутствии имени файла.
-def test_log_to_console(capsys):
+def test_log_to_console(capsys: pytest.CaptureFixture[str]) -> None:
     """Проверяет вывод логов в консоль, когда filename не указан"""
 
     @log()  # Нет filename - логи идут в консоль
-    def my_function(x, y):
+    def my_function(x: int, y: int) -> int:
         return x + y
 
     result = my_function(5, 3)
@@ -55,11 +56,11 @@ def test_log_to_console(capsys):
 
 # Тест 003: Проверяет, что декоратор корректно: обрабатывает неправильные типы данных переданных в функцию;
 # и логирует их.
-def test_log_with_exception():
+def test_log_with_exception() -> None:
     """Проверяет, что декоратор логирует исключения при передаче неверных типов аргументов"""
 
     @log(filename="test_error.txt")
-    def my_function(x, y):
+    def my_function(x: int, y: int) -> int:
         return x + y
 
     # Проверяем, что TypeError возникает при передаче строки
@@ -80,11 +81,11 @@ def test_log_with_exception():
 
 
 # Тест 004: Проверяет правильность логирования декоратором в случае ошибки если не указано имя файла.
-def test_log_with_exception_console(capsys):
+def test_log_with_exception_console(capsys: pytest.CaptureFixture[str]) -> None:
     """Проверяет, что декоратор логирует исключения в консоль при отсутствии filename"""
 
     @log()  # Нет filename - логи идут в консоль
-    def my_function(x, y):
+    def my_function(x: int, y: int) -> int:
         return x + y
 
     # Проверяем, что TypeError возникает при передаче строки
@@ -103,11 +104,11 @@ def test_log_with_exception_console(capsys):
 
 
 # Тест 005: Проверяет, что декоратор корректно обрабатывает неправильные типы данных в именованных аргументах (kwargs).
-def test_log_with_exception_kwargs():
+def test_log_with_exception_kwargs() -> None:
     """Проверяет, что декоратор логирует исключения при передаче неверных типов в именованных аргументах"""
 
     @log(filename="test_kwargs_error.txt")
-    def my_function(x, y=None):
+    def my_function(x: int, y: Any = None) -> Any:
         return x + y
 
     with pytest.raises(TypeError) as exc_info:
