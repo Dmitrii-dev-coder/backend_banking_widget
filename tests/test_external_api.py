@@ -1,5 +1,4 @@
 # Проверка функции get_sum_of_transaction.
-
 from unittest.mock import Mock, patch
 
 import pytest
@@ -61,4 +60,26 @@ def test_get_sum_of_transaction_negative(mock_requests_get: Mock) -> None:
     mock_requests_get.return_value.json.return_value = {"message": "Not Found"}
 
     with pytest.raises(ValueError, match="Failed to get currency rate"):
+        get_sum_of_transaction(transaction)
+
+
+# Тест 004: Проверка обработки отсутствующего API_KEY.
+@patch("src.external_api.API_KEY", None)
+def test_get_sum_of_transaction_no_api_key() -> None:
+    """Проверяет, что функция корректно обрабатывает отсутствие API_KEY."""
+    transaction = {
+        "id": 1,
+        "state": "EXECUTED",
+        "date": "2019-04-04T23:20:05.206878",
+        "operationAmount": {
+            "amount": "100",
+            "currency": {
+                "name": "USD",
+                "code": "USD"
+            }
+        }
+    }
+
+    # Теперь мы подменяем переменную прямо внутри модуля
+    with pytest.raises(ValueError, match="API_KEY не найден"):
         get_sum_of_transaction(transaction)

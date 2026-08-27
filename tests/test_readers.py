@@ -1,6 +1,6 @@
 import pandas as pd
 from pathlib import Path
-import pandas.errors as pde  # Для обработки ошибок парсинга
+
 from unittest.mock import patch, mock_open
 
 from src.readers import get_transactions_from_csv_file, get_transactions_from_excel_file
@@ -106,7 +106,7 @@ def test_get_transactions_from_excel_file_empty() -> None:
 
 # Тест 104: Проверка функции на excel-файл с не валидным данными (данные в строке неполные, в ячейке NaN).
 @patch("src.readers.pd.read_excel")
-def test_get_transactions_from_excel_file_with_nan(mock_read_excel):
+def test_get_transactions_from_excel_file_with_nan(mock_read_excel) -> None:
     """Передает Excel с пустыми ячейками и проверяет обработку."""
     # 1. Создаем DataFrame с пустой ячейкой (float('nan'))
     df_with_nan = pd.DataFrame({
@@ -129,7 +129,7 @@ def test_get_transactions_from_excel_file_with_nan(mock_read_excel):
 
 # Тест 105: Проверка функции на excel-файл с неправильно именованными столбцами.
 @patch("src.readers.pd.read_excel")
-def test_get_transactions_from_excel_file_wrong_columns(mock_read_excel):
+def test_get_transactions_from_excel_file_wrong_columns(mock_read_excel) -> None:
     """Передает Excel с невалидными именами столбцов и проверяет обработку."""
     # Создаем DataFrame с совершенно другими именами столбцов
     df_wrong = pd.DataFrame({
@@ -152,7 +152,7 @@ def test_get_transactions_from_excel_file_wrong_columns(mock_read_excel):
 
 # Тест 106: Проверка функции, что она возвращает корректные данные (Например, проверь, что id транзакции и сумма совпадают).
 @patch("src.readers.pd.read_excel")
-def test_get_transactions_from_excel_file_verify_data(mock_read_excel):
+def test_get_transactions_from_excel_file_verify_data(mock_read_excel) -> None:
     """Передает Excel с корректными данными и проверяет, что id и amount совпадают."""
     # 1. Создаем DataFrame с корректными данными
     df_correct = pd.DataFrame({
@@ -176,3 +176,12 @@ def test_get_transactions_from_excel_file_verify_data(mock_read_excel):
     assert result[0]["amount"] == 5000.0
     assert result[1]["id"] == 200
     assert result[1]["amount"] == 15000.0
+
+
+# Тест 107: Проверка функции, что при отсутствии данных в Excel-файле (пустая структура) она возвращает пустой список.
+@patch("src.readers.pd.read_excel")
+def test_get_transactions_from_excel_file_empty_data(mock_read_excel) -> None:
+    """Симулирует ошибку pd.errors.EmptyDataError и проверяет, что возвращается пустой список."""
+    mock_read_excel.side_effect = pd.errors.EmptyDataError("Excel file is empty")
+    result = get_transactions_from_excel_file(str(test_data_dir / "empty_data.xlsx"))
+    assert result == []
