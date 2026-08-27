@@ -1,6 +1,6 @@
-import json
+from typing import Dict, List
+
 import pytest
-from typing import Dict, Iterator, List
 
 
 @pytest.fixture

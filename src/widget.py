@@ -7,15 +7,14 @@ from src.masks import get_mask_account, get_mask_card_number
 
 # Текст ошибки для валидации номера карты или счёта
 ERROR_TEXT = (
-        "Неправильный номер карты (<Логотип платежной системы (Visa Classic, Visa Platinum, "
-        "Visa Gold, MasterCard, Maestro) ________________ (16 цифр)>) или неправильный номер счета "
-        "(<Счет ____________________ (20 цифр)>)"
-    )
+    "Неправильный номер карты (<Логотип платежной системы (Visa Classic, Visa Platinum, "
+    "Visa Gold, MasterCard, Maestro) ________________ (16 цифр)>) или неправильный номер счета "
+    "(<Счет ____________________ (20 цифр)>)"
+)
 
 # Допустимые логотипы карт
-VALID_CARD_LOGOS = [
-    "Visa Classic", "Visa Platinum", "Visa Gold", "MasterCard", "Maestro"
-]
+VALID_CARD_LOGOS = ["Visa Classic", "Visa Platinum", "Visa Gold", "MasterCard", "Maestro"]
+
 
 def mask_account_card(account_card: str) -> str:
     """Маскирует полученный номер карты или счёта.
