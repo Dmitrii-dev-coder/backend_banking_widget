@@ -71,13 +71,7 @@ def test_get_sum_of_transaction_no_api_key() -> None:
         "id": 1,
         "state": "EXECUTED",
         "date": "2019-04-04T23:20:05.206878",
-        "operationAmount": {
-            "amount": "100",
-            "currency": {
-                "name": "USD",
-                "code": "USD"
-            }
-        }
+        "operationAmount": {"amount": "100", "currency": {"name": "USD", "code": "USD"}},
     }
 
     # Теперь мы подменяем переменную прямо внутри модуля

@@ -5,9 +5,9 @@ from unittest.mock import patch, mock_open
 
 from src.readers import get_transactions_from_csv_file, get_transactions_from_excel_file
 
-
 # Путь к папке с данными (на два уровня выше текущей папки tests)
 test_data_dir = Path(__file__).parent.parent / "data"
+
 
 # 0. Проверка функции get_transactions_from_csv_file.
 # Тест 001: Позитивный сценарий, когда файл существует.
@@ -97,6 +97,7 @@ def test_get_transactions_from_excel_file_negative() -> None:
     result = get_transactions_from_excel_file(str(test_data_dir / "operations_excel.xlsx"))
     assert result == []
 
+
 # Тест 103: Проверка функции, что при передаче ей пустого файла она возвращает пустой список.
 def test_get_transactions_from_excel_file_empty() -> None:
     """Передает пустой файл и проверяет, что возвращается пустой список."""
@@ -104,15 +105,13 @@ def test_get_transactions_from_excel_file_empty() -> None:
         result = get_transactions_from_excel_file(str(test_data_dir / "empty.xlsx"))
         assert result == []
 
+
 # Тест 104: Проверка функции на excel-файл с не валидным данными (данные в строке неполные, в ячейке NaN).
 @patch("src.readers.pd.read_excel")
 def test_get_transactions_from_excel_file_with_nan(mock_read_excel) -> None:
     """Передает Excel с пустыми ячейками и проверяет обработку."""
     # 1. Создаем DataFrame с пустой ячейкой (float('nan'))
-    df_with_nan = pd.DataFrame({
-        "id": [1.0, float('nan')],  # Вторая строка пустая
-        "state": ["EXECUTED", "CANCELED"]
-    })
+    df_with_nan = pd.DataFrame({"id": [1.0, float("nan")], "state": ["EXECUTED", "CANCELED"]})  # Вторая строка пустая
 
     # 2. Говорим библиотеке pandas, что именно этот DataFrame вернет функция read_excel
     mock_read_excel.return_value = df_with_nan
@@ -132,10 +131,7 @@ def test_get_transactions_from_excel_file_with_nan(mock_read_excel) -> None:
 def test_get_transactions_from_excel_file_wrong_columns(mock_read_excel) -> None:
     """Передает Excel с невалидными именами столбцов и проверяет обработку."""
     # Создаем DataFrame с совершенно другими именами столбцов
-    df_wrong = pd.DataFrame({
-        "weird_col_1": [1, 2],
-        "weird_col_2": ["Data", "Data"]
-    })
+    df_wrong = pd.DataFrame({"weird_col_1": [1, 2], "weird_col_2": ["Data", "Data"]})
 
     # Говорим библиотеке pandas, что именно этот DataFrame вернет функция read_excel
     mock_read_excel.return_value = df_wrong
@@ -155,11 +151,7 @@ def test_get_transactions_from_excel_file_wrong_columns(mock_read_excel) -> None
 def test_get_transactions_from_excel_file_verify_data(mock_read_excel) -> None:
     """Передает Excel с корректными данными и проверяет, что id и amount совпадают."""
     # 1. Создаем DataFrame с корректными данными
-    df_correct = pd.DataFrame({
-        "id": [100, 200],
-        "state": ["EXECUTED", "CANCELED"],
-        "amount": [5000.0, 15000.0]
-    })
+    df_correct = pd.DataFrame({"id": [100, 200], "state": ["EXECUTED", "CANCELED"], "amount": [5000.0, 15000.0]})
 
     # 2. Настраиваем mock так, чтобы он возвращал наш DataFrame
     mock_read_excel.return_value = df_correct

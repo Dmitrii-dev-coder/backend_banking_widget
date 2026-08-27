@@ -11,6 +11,7 @@ from src.utils import get_transactions_from_json_file
 from src.widget import get_date, mask_account_card
 from src.readers import get_transactions_from_csv_file, get_transactions_from_excel_file
 
+
 # ============================= ФУНУКЦИИ - ОБЁРТКИ ДЛЯ ВЫЗОВА ФУНКЦИЙ МОДУЛЕЙ =====================
 # 0. Модуль masks:
 # 0.1 Функция get_mask_card_number.
@@ -160,6 +161,7 @@ def run_log_to_file() -> None:
 
     _ = my_function(5, 7)
 
+
 # 4.2 Функция log.
 def run_log_to_console() -> None:
     """
@@ -233,7 +235,6 @@ def run_get_transactions_from_excel_file(file_path: str) -> list[dict[str, Any]]
     return result
 
 
-
 # =========================== ЗАПУСК ФУНКЦИЙ ИЗ МОДУЛЕЙ ===========================================================
 if __name__ == "__main__":
     # 0. ---------------- Запуск функций из модуля masks ----------------:
@@ -246,7 +247,6 @@ if __name__ == "__main__":
     print(" ")
     print("Результат работы функции mask_account:")
     print(run_mask_account("73654108430135874305"))
-
 
     # 1. ----------------- Запуск функций из модуля widget -----------------:
     # 1.1 Вызов функции mask_account_card, маскировки номера карты и номера счета.

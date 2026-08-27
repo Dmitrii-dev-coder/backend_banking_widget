@@ -19,12 +19,12 @@ def get_transactions_from_csv_file(file_path: str) -> list[dict[str, Any]]:
     """
     try:
         logger.debug(f"Функция get_transactions_from_csv_file запущена с параметром {file_path}")
-        df = pd.read_csv(file_path, sep=';')
+        df = pd.read_csv(file_path, sep=";")
 
         # Заменяем NaN на None для безопасной конвертации и возможной сериализации
         df = df.replace({np.nan: None})
 
-        transactions = df.to_dict('records')
+        transactions = df.to_dict("records")
         logger.debug(f"Транзакции успешно загружены из файла {file_path}")
         return transactions
     except FileNotFoundError:
@@ -52,7 +52,7 @@ def get_transactions_from_excel_file(file_path: str) -> list[dict[str, Any]]:
         logger.debug(f"Функция get_transactions_from_excel_file запущена с параметром {file_path}")
         df = pd.read_excel(file_path)
         df = df.replace({np.nan: None})
-        transactions = df.to_dict('records')
+        transactions = df.to_dict("records")
         logger.debug(f"Транзакции успешно загружены из файла {file_path}")
         return transactions
     except FileNotFoundError:
