@@ -1,5 +1,6 @@
 # ============================= ИМПОРТ ФУНКЦИЙ И МОДУЛЕЙ ПРОЕКТА ==============================
 from typing import Any, Dict, Generator, Iterator, List
+import pandas as pd
 
 from src.decorators import log
 from src.external_api import get_sum_of_transaction
@@ -8,6 +9,7 @@ from src.masks import get_mask_account, get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
 from src.utils import get_transactions_from_json_file
 from src.widget import get_date, mask_account_card
+from src.readers import get_transactions_from_csv_file, get_transactions_from_excel_file
 
 # ============================= ФУНУКЦИИ - ОБЁРТКИ ДЛЯ ВЫЗОВА ФУНКЦИЙ МОДУЛЕЙ =====================
 # 0. Модуль masks:
@@ -189,8 +191,6 @@ def run_get_transactions_from_json_file(file_path: str) -> list[dict[str, Any]]:
 
 # 6. Модуль external_api:
 # 6.1 Функция get_sum_of_transaction.
-
-
 def run_get_sum_of_transaction(transaction: dict[str, Any]) -> float:
     """
     Обёртка для функции get_sum_of_transaction из модуля external_api.
@@ -202,6 +202,36 @@ def run_get_sum_of_transaction(transaction: dict[str, Any]) -> float:
     result = get_sum_of_transaction(transaction)
 
     return result
+
+
+# 7. Модуль readers:
+# 7.1 Функция get_transactions_from_csv_file.
+def run_get_transactions_from_csv_file(file_path: str) -> list[dict[str, Any]]:
+    """
+    Обёртка для функции get_transactions_from_csv_file из модуля readers.
+    Принимает:
+        file_path: путь к CSV-файлу с транзакциями.
+    Возвращает:
+        список словарей с данными о финансовых транзакциях.
+    """
+    result = get_transactions_from_csv_file(file_path)
+
+    return result
+
+
+# 7.2 Функция get_transactions_from_excel_file.
+def run_get_transactions_from_excel_file(file_path: str) -> list[dict[str, Any]]:
+    """
+    Обёртка для функции get_transactions_from_excel_file из модуля readers.
+    Принимает:
+        file_path: путь к excel-файлу с транзакциями.
+    Возвращает:
+        список словарей с данными о финансовых транзакциях.
+    """
+    result = get_transactions_from_excel_file(file_path)
+
+    return result
+
 
 
 # =========================== ЗАПУСК ФУНКЦИЙ ИЗ МОДУЛЕЙ ===========================================================
@@ -428,7 +458,7 @@ if __name__ == "__main__":
     """
 
     # 5. -------------------- Запуск функций модуля utils -------------------------------:
-    # 5.1. Вызов get_transactions_from_file, которая принимает данные из файла и возвращает список словарей с транзакциями.
+    # 5.1 Вызов get_transactions_from_file, которая принимает данные из файла и возвращает список словарей с транзакциями.
     print("\n------ Модуль utils ------ :")
     print("Результат работы функции get_transactions_from_file:")
     print(run_get_transactions_from_json_file("data/operations.json"))
@@ -445,7 +475,7 @@ if __name__ == "__main__":
     """
 
     # 6. ------------------- Запуск функции модуля external_api ------------------------:
-    # 6.1. Вызов функции get_sum_of_transaction, которая считает сумму транзакций в рублях.
+    # 6.1 Вызов функции get_sum_of_transaction, которая считает сумму транзакций в рублях.
     print("\n------ Модуль external_api ------ :")
     print("Результат работы функции get_sum_of_transaction:")
     single_transaction = {
@@ -463,4 +493,40 @@ if __name__ == "__main__":
     """
     Вывод суммы выбранной транзакций из файла в рублях:
     5849382.922329 # По курсу на 12.08.2026
+    """
+
+    # 7. ------------------- Запуск функций модуля readers ------------------------:
+    # 7.1 Вызов функции run_get_transaction_from_csv_file, которая принимает данные из файла и возвращает список словарей с транзакциями.
+    print("\n------ Модуль readers ------ :")
+    print("Результат работы функции get_transaction_from_csv_file:")
+
+    # Сохраняем данные в переменную, чтобы обработать их через DataFrame
+    csv_data = run_get_transactions_from_csv_file("data/transactions.csv")
+    print(pd.DataFrame(csv_data).head(3))  # Выводим только первые 3 строки таблицы
+
+    # Сверка результата:
+    """
+        Результат работы функции get_transaction_from_csv_file:
+      id;state;date;amount;currency_name;currency_code;from;to;description
+    0  650703;EXECUTED;2023-09-05T11:30:32Z;16210;Sol...                  
+    1  3598919;EXECUTED;2020-12-06T23:00:58Z;29740;Pe...                  
+    2  593027;CANCELED;2023-07-22T05:02:01Z;30368;Shi...                  
+    """
+
+    # 7.2 Вызов функции run_get_transaction_from_excel_file, которая принимает данные из файла и возвращает список словарей с транзакциями.
+    print(" ")
+    print("Результат работы функции get_transaction_from_excel_file:")
+
+    excel_data = run_get_transactions_from_excel_file("data/transactions_excel.xlsx")
+    print(pd.DataFrame(excel_data).head(3))  # Выводим только первые 3 строки таблицы
+
+    # Сверка результата:
+    """
+        Результат работы функции get_transaction_from_excel_file:
+              id     state  ...                         to               description
+    0   650703.0  EXECUTED  ...  Счет 39745660563456619397       Перевод организации
+    1  3598919.0  EXECUTED  ...  Discover 0720428384694643  Перевод с карты на карту
+    2   593027.0  CANCELED  ...      Visa 6804119550473710  Перевод с карты на карту
+    
+    [3 rows x 9 columns]
     """
