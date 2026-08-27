@@ -1,7 +1,7 @@
-import pandas as pd
 from pathlib import Path
+from unittest.mock import mock_open, patch
 
-from unittest.mock import patch, mock_open
+import pandas as pd
 
 from src.readers import get_transactions_from_csv_file, get_transactions_from_excel_file
 

@@ -1,5 +1,6 @@
 # ============================= ИМПОРТ ФУНКЦИЙ И МОДУЛЕЙ ПРОЕКТА ==============================
 from typing import Any, Dict, Generator, Iterator, List
+
 import pandas as pd
 
 from src.decorators import log
@@ -7,9 +8,9 @@ from src.external_api import get_sum_of_transaction
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 from src.masks import get_mask_account, get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
+from src.readers import get_transactions_from_csv_file, get_transactions_from_excel_file
 from src.utils import get_transactions_from_json_file
 from src.widget import get_date, mask_account_card
-from src.readers import get_transactions_from_csv_file, get_transactions_from_excel_file
 
 
 # ============================= ФУНУКЦИИ - ОБЁРТКИ ДЛЯ ВЫЗОВА ФУНКЦИЙ МОДУЛЕЙ =====================
