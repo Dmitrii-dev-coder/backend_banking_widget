@@ -61,7 +61,8 @@ def test_get_transactions_from_csv_file_with_nan() -> None:
     assert result[0]["amount"] is None or pd.isna(result[0]["amount"])
 
 
-# Тест 006: Проверка функции, что она возвращает корректные данные (Например, проверь, что id транзакции и сумма совпадают).
+# Тест 006: Проверка функции, что она возвращает корректные данные (Например, проверь, что id транзакции и
+# сумма совпадают).
 def test_get_transactions_from_csv_file_verify_amount() -> None:
     """Проверяет, что данные загружены корректно (например, сумма)."""
     file_path = test_data_dir / "transactions.csv"
@@ -146,7 +147,8 @@ def test_get_transactions_from_excel_file_wrong_columns(mock_read_excel) -> None
     assert "id" not in result[0]
 
 
-# Тест 106: Проверка функции, что она возвращает корректные данные (Например, проверь, что id транзакции и сумма совпадают).
+# Тест 106: Проверка функции, что она возвращает корректные данные (Например, проверь, что id транзакции и
+# сумма совпадают).
 @patch("src.readers.pd.read_excel")
 def test_get_transactions_from_excel_file_verify_data(mock_read_excel) -> None:
     """Передает Excel с корректными данными и проверяет, что id и amount совпадают."""
