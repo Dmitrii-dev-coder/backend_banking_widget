@@ -6,7 +6,7 @@ from src.logger import setup_logger
 logger = setup_logger("utils", "logs/utils.log")
 
 
-def get_transactions_from_file(file_path: str) -> list[dict[str, Any]]:
+def get_transactions_from_json_file(file_path: str) -> list[dict[str, Any]]:
     """
     Получает транзакции из файла в JSON формате.
 
@@ -28,7 +28,7 @@ def get_transactions_from_file(file_path: str) -> list[dict[str, Any]]:
                     return []
             except json.JSONDecodeError:
                 logger.error(f"Ошибка при декодировании JSON в файле {file_path}:")
-                transactions = []
+                return []
     except FileNotFoundError:
         logger.error(f"Файл {file_path} не найден.")
         return []

@@ -1,13 +1,13 @@
 # Проверка функции get_transactions_from_file.
 from unittest.mock import mock_open, patch
 
-from src.utils import get_transactions_from_file
+from src.utils import get_transactions_from_json_file
 
 
 # Тест 001: Позитивный сценарий, когда файл существует.
 def test_get_transactions_from_file_positive() -> None:
     """Передает существующий путь и проверяет что вернулся список словарей."""
-    result = get_transactions_from_file("data/operations.json")
+    result = get_transactions_from_json_file("data/operations.json")
     assert isinstance(result, list)  # Проверяет, что результат является списком.
     assert len(result) > 0  # Проверяет, что список не пустой.
     assert isinstance(result[0], dict)  # Проверяет, что элементы списка являются словарями.
@@ -19,7 +19,7 @@ def test_get_transactions_from_file_positive() -> None:
 # Тест 002: Проверка, что при не существующем пути возвращается пустой список.
 def test_get_transactions_from_file_invalid_path() -> None:
     """Передает не существующий путь к файлу и проверяет, что возвращается пустой список."""
-    result = get_transactions_from_file("data/transactions.json")
+    result = get_transactions_from_json_file("data/transactions.json")
     assert result == []
 
 
@@ -27,7 +27,7 @@ def test_get_transactions_from_file_invalid_path() -> None:
 def test_get_transactions_from_file_empty() -> None:
     """Передаете пустой файл и получаете пустой список."""
     with patch("builtins.open", mock_open(read_data="")):
-        result = get_transactions_from_file("data/fake.json")
+        result = get_transactions_from_json_file("data/fake.json")
         assert result == []
 
 
@@ -35,7 +35,7 @@ def test_get_transactions_from_file_empty() -> None:
 def test_get_transactions_from_file_invalid_json() -> None:
     """Тест на чтение файла с невалидным JSON."""
     with patch("builtins.open", mock_open(read_data="invalid json")):
-        result = get_transactions_from_file("data/fake.json")
+        result = get_transactions_from_json_file("data/fake.json")
         assert result == []
 
 
@@ -44,5 +44,5 @@ def test_get_transactions_from_file_invalid_json() -> None:
 def test_get_transactions_from_file_not_list() -> None:
     """Тест на чтение файла с валидным JSON но не списком."""
     with patch("builtins.open", mock_open(read_data='{"key": "value"}')):
-        result = get_transactions_from_file("data/fake.json")
+        result = get_transactions_from_json_file("data/fake.json")
         assert result == []

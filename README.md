@@ -130,7 +130,7 @@ python main.py
 6. **Модуль decorators.py:** Проверка декоратора log с записью в файл и выводом в консоль через обёртки run_log_to_file и run_log_to_console.
 
 
-7. **Модуль utils.py:** Проверка функции get_transactions_from_file через обёртку run_get_transactions_from_file. Результатом будет вывод списка словарей транзакций из файла data/operations.json.
+7. **Модуль utils.py:** Проверка функции get_transactions_from_json_file через обёртку run_get_transactions_from_file. Результатом будет вывод списка словарей транзакций из файла data/operations.json.
 
 
 8. **Модуль external_api.py:** Проверка функции get_sum_of_transaction через обёртку run_get_sum_of_transaction. Результатом будет сумма транзакции в рублях, полученная через конвертацию.
@@ -307,7 +307,7 @@ bash pytest
 
 ### Модуль utils
 
-#### Функция get_transactions_from_file:
+#### Функция get_transactions_from_json_file:
    **Тест 001:** Позитивный сценарий — проверка структуры возвращаемого списка.
    **Тест 002:** Проверка возврата пустого списка при несуществующем пути.
    **Тест 003:** Проверка возврата пустого списка при пустом файле.

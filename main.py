@@ -6,7 +6,7 @@ from src.external_api import get_sum_of_transaction
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 from src.masks import get_mask_account, get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
-from src.utils import get_transactions_from_file
+from src.utils import get_transactions_from_json_file
 from src.widget import get_date, mask_account_card
 
 # ============================= ФУНУКЦИИ - ОБЁРТКИ ДЛЯ ВЫЗОВА ФУНКЦИЙ МОДУЛЕЙ =====================
@@ -174,7 +174,7 @@ def run_log_to_console() -> None:
 
 # 5. Модуль utils:
 # 5.1 Функция get_transactions_from_file.
-def run_get_transactions_from_file(file_path: str) -> list[dict[str, Any]]:
+def run_get_transactions_from_json_file(file_path: str) -> list[dict[str, Any]]:
     """
     Обёртка для функции get_transactions_from_file из модуля utils.
     Принимает:
@@ -182,7 +182,7 @@ def run_get_transactions_from_file(file_path: str) -> list[dict[str, Any]]:
     Возвращает:
         список словарей с данными о финансовых транзакциях.
     """
-    result = get_transactions_from_file(file_path)
+    result = get_transactions_from_json_file(file_path)
 
     return result
 
@@ -431,7 +431,7 @@ if __name__ == "__main__":
     # 5.1. Вызов get_transactions_from_file, которая принимает данные из файла и возвращает список словарей с транзакциями.
     print("\n------ Модуль utils ------ :")
     print("Результат работы функции get_transactions_from_file:")
-    print(run_get_transactions_from_file("data/operations.json"))
+    print(run_get_transactions_from_json_file("data/operations.json"))
 
     # Сверка результата:
     """
