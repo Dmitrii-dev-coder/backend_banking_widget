@@ -7,15 +7,25 @@ from src.masks import get_mask_account, get_mask_card_number
 
 # Текст ошибки для валидации номера карты или счёта
 ERROR_TEXT = (
-        "Неправильный номер карты (<Логотип платежной системы (Visa Classic, Visa Platinum, "
-        "Visa Gold, MasterCard, Maestro) ________________ (16 цифр)>) или неправильный номер счета "
-        "(<Счет ____________________ (20 цифр)>)"
-    )
+    "Неправильный номер карты (<Логотип платежной системы (Visa Classic, Visa Platinum, "
+    "Visa Gold, MasterCard, Maestro) ________________ (16 цифр)>) или неправильный номер счета "
+    "(<Счет ____________________ (20 цифр)>)"
+)
 
 # Допустимые логотипы карт
 VALID_CARD_LOGOS = [
-    "Visa Classic", "Visa Platinum", "Visa Gold", "MasterCard", "Maestro"
+    "Visa Classic",
+    "Visa Platinum",
+    "Visa Gold",
+    "Visa",
+    "MasterCard",
+    "Mastercard",
+    "Maestro",
+    "МИР",
+    "American Express",
+    "Discover",
 ]
+
 
 def mask_account_card(account_card: str) -> str:
     """Маскирует полученный номер карты или счёта.
@@ -25,7 +35,7 @@ def mask_account_card(account_card: str) -> str:
     """
 
     # Извлекаем буквенную и числовую части
-    letters_part = "".join(re.findall(r"\D+", account_card))
+    letters_part = "".join(re.findall(r"\D+", account_card)).strip()
     numbers_part = "".join(re.findall(r"\d+", account_card))
 
     # Переменная для результата (требуется для совместимости с проектом)
@@ -60,6 +70,11 @@ def get_date(date_iso_8601: str) -> str:
     )
     try:
         formatted_date = datetime.strptime(date_iso_8601, "%Y-%m-%dT%H:%M:%S.%f")
+        return formatted_date.strftime("%d.%m.%Y")
+    except ValueError:
+        pass
+    try:
+        formatted_date = datetime.strptime(date_iso_8601, "%Y-%m-%dT%H:%M:%SZ")
         return formatted_date.strftime("%d.%m.%Y")
     except ValueError:
         raise ValueError(error_text)

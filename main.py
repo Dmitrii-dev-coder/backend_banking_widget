@@ -1,267 +1,123 @@
-# Импорт функция из модулей masks.py и widget.py
-from typing import Dict, Generator, Iterator, List
+# 0. ================================== СОДЕРЖАНИЕ МОДУЛЯ MAIN ====================================
+# I. ИМПОРТ БИБЛИОТЕК, ФУНКЦИЙ И МОДУЛЕЙ ПРОЕКТА
+# II. ОСНОВНАЯ ФУНКЦИЯ ПРОЕКТА - main()
 
-from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
-from src.masks import get_mask_account, get_mask_card_number
+
+# I. =============================== ИМПОРТ ФУНКЦИЙ И МОДУЛЕЙ ПРОЕКТА ==============================
+from src.generators import filter_by_currency
 from src.processing import filter_by_state, sort_by_date
+from src.readers import get_transactions_from_csv_file, get_transactions_from_excel_file
+from src.search import process_bank_search
+from src.utils import get_transactions_from_json_file
 from src.widget import get_date, mask_account_card
 
 
-# Проверка правильной работы функций из модуля masks
-def checking_masks_functions() -> None:
-    """Тест на правильность маскировки номера карты и счета"""
+# II. ======================== ОСНОВНАЯ ФУНКЦИЯ ПРОЕКТА - main() ==================================
+def main() -> None:
+    """Основная функция программы — связывает всю функциональность проекта."""
+    from typing import Any as AnyType
 
-    card_number = "7000792289606361"  # пример номера карты
-    account_number = "73654108430135874305"  # пример номера счета
+    # Приветствие и меню
+    print("Программа: Привет! Добро пожаловать в программу работы")
+    print("с банковскими транзакциями.")
+    print("Выберите необходимый пункт меню:")
+    print("1. Получить информацию о транзакциях из JSON-файла")
+    print("2. Получить информацию о транзакциях из CSV-файла")
+    print("3. Получить информацию о транзакциях из XLSX-файла")
 
-    masked_card = get_mask_card_number(card_number)
-    masked_account = get_mask_account(account_number)
+    # Выбор источника
+    choice = input("Программа: ")
+    data: list[dict[AnyType, AnyType]] = []
 
-    print(f"Замаскированный номер карты: {masked_card}")
-    print(f"Замаскированный номер счета: {masked_account}")
+    if choice == "1":
+        print("Программа: Для обработки выбран JSON-файл.")
+        data = get_transactions_from_json_file("data/operations.json")
+    elif choice == "2":
+        print("Программа: Для обработки выбран CSV-файл.")
+        data = get_transactions_from_csv_file("data/transactions.csv")
+    elif choice == "3":
+        print("Программа: Для обработки выбран XLSX-файл.")
+        data = get_transactions_from_excel_file("data/transactions_excel.xlsx")
+    else:
+        print("Программа: Неверный выбор. Используйте 1, 2 или 3.")
+        return
 
+    # Фильтрация по статусу (цикл до ввода корректного значения)
+    valid_statuses = ["EXECUTED", "CANCELED", "PENDING"]
+    while True:
+        status = (
+            input(
+                "Программа: Введите статус, по которому необходимо выполнить фильтрацию.\n"
+                "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\n"
+                "Программа: "
+            )
+            .strip()
+            .upper()
+        )
 
-# Проверка правильности функций mask_account_card из модуля widget
-def checking_widget_functions1(account_card: str) -> str:
-    """Тест правильности маскировки номера карты и счета"""
+        if status in valid_statuses:
+            print(f'Программа: Операции отфильтрованы по статусу "{status}"')
+            data = filter_by_state(data, status)
+            break
+        else:
+            print(f'Программа: Статус операции "{status}" недоступен.')
 
-    hidden_account_card = mask_account_card(account_card)
+    # Сортировка по дате
+    sort_choice = input("Программа: Отсортировать операции по дате? Да/Нет ").strip().lower()
+    if sort_choice in ("да", "yes", "y"):
+        order = input("Программа: Отсортировать по возрастанию или по убыванию? ").strip().lower()
+        if order in ("возрастание", "по возрастанию"):
+            data = sort_by_date(data, descending=False)
+        elif order in ("убывание", "по убыванию"):
+            data = sort_by_date(data, descending=True)
 
-    return hidden_account_card
+    # Рублевые транзакции
+    ruble_choice = input("Программа: Выводить только рублевые транзакции? Да/Нет ").strip().lower()
+    if ruble_choice in ("да", "yes", "y"):
+        try:
+            data = list(filter_by_currency(data, "RUB"))
+        except KeyError:
+            data = [t for t in data if t.get("currency_code") == "RUB"]
 
+    # Поиск по слову
+    search_choice = (
+        input("Программа: Отфильтровать список транзакций по определенному слову\nв описании? Да/Нет ").strip().lower()
+    )
+    if search_choice in ("да", "yes", "y"):
+        search = input("Программа: Введите слово для поиска: ").strip()
+        data = process_bank_search(data, search)
 
-# Проверка правильности работы функции get_date из модуля widget
-def checking_widget_functions2(date_iso_8601: str) -> str:
-    """Тест правильности извлечения даты в обычном формате из международного стандарта написания даты и времени"""
+    # Вывод результата
+    print("Программа: Распечатываю итоговый список транзакций...")
 
-    extracted_date = get_date(date_iso_8601)
+    if not data:
+        print("Программа: Не найдено ни одной транзакции, подходящей под ваши")
+        print("условия фильтрации")
+        return
 
-    return extracted_date
+    print(f"Программа: Всего банковских операций в выборке: {len(data)}")
 
-
-# Проверка работы функций из модуля processing.py
-def checking_filter_by_state(my_list: list, state: str = "EXECUTED") -> list:
-    """Тест правильности фильтрации данных в виде списка словарей - my_list по 'state'"""
-    filtered_list = filter_by_state(my_list, state)
-
-    return filtered_list
-
-
-def checking_sort_by_date(my_list: list, descending: bool = True) -> list:
-    """Тест правильности сортировки данных в виде списка словарей - my_list по 'date'"""
-    sorted_list = sort_by_date(my_list, descending)
-
-    return sorted_list
-
-
-# Примеры использования функций модуля generators.py:
-# 0. filter_by_currency.
-transaction = [
-    {
-        "id": 939719570,
-        "state": "EXECUTED",
-        "date": "2018-06-30T02:08:58.425572",
-        "operationAmount": {"amount": "9824.07", "currency": {"name": "USD", "code": "USD"}},
-        "description": "Перевод организации",
-        "from": "Счет 75106830613657916952",
-        "to": "Счет 11776614605963066702",
-    },
-    {
-        "id": 142264268,
-        "state": "EXECUTED",
-        "date": "2019-04-04T23:20:05.206878",
-        "operationAmount": {"amount": "79114.93", "currency": {"name": "USD", "code": "USD"}},
-        "description": "Перевод со счета на счет",
-        "from": "Счет 19708645243227258542",
-        "to": "Счет 75651667383060284188",
-    },
-    {
-        "id": 873106923,
-        "state": "EXECUTED",
-        "date": "2019-03-23T01:09:46.296404",
-        "operationAmount": {"amount": "43318.34", "currency": {"name": "руб.", "code": "RUB"}},
-        "description": "Перевод со счета на счет",
-        "from": "Счет 44812258784861134719",
-        "to": "Счет 74489636417521191160",
-    },
-    {
-        "id": 895315941,
-        "state": "EXECUTED",
-        "date": "2018-08-19T04:27:37.904916",
-        "operationAmount": {"amount": "56883.54", "currency": {"name": "USD", "code": "USD"}},
-        "description": "Перевод с карты на карту",
-        "from": "Visa Classic 6831982476737658",
-        "to": "Visa Platinum 8990922113665229",
-    },
-    {
-        "id": 594226727,
-        "state": "CANCELED",
-        "date": "2018-09-12T21:27:25.241689",
-        "operationAmount": {"amount": "67314.70", "currency": {"name": "руб.", "code": "RUB"}},
-        "description": "Перевод организации",
-        "from": "Visa Platinum 1246377376343588",
-        "to": "Счет 14211924144426031657",
-    },
-]
-
-
-def checking_filter_by_currency(transaction_list: List[Dict], currency: str) -> Iterator[Dict]:
-    """
-    Пример использования функции filter_by_currency.
-    Принимает:
-        transaction (List[Dict]): Список словарей с транзакциями.
-    Возвращает:
-        при обращении (через next()) возвращает отфильтрованные по коду валюты транзакции.
-    """
-    usd_transactions = filter_by_currency(transaction_list, currency)
-
-    return usd_transactions
+    for transaction in data:
+        print()
+        print(f"{get_date(transaction['date'])} {transaction['description']}")
+        if "from" in transaction:
+            try:
+                print(mask_account_card(transaction["from"]))
+            except ValueError:
+                print(transaction["from"])
+        if "to" in transaction:
+            try:
+                print(mask_account_card(transaction["to"]))
+            except ValueError:
+                print(transaction["to"])
+        if "operationAmount" in transaction:
+            print(
+                f"Сумма: {transaction['operationAmount']['amount']} "
+                f"{transaction['operationAmount']['currency']['code']}"
+            )
+        elif "amount" in transaction and "currency_code" in transaction:
+            print(f"Сумма: {transaction['amount']} {transaction['currency_code']}")
 
 
-# 1. transaction_descriptions.
-def checking_transaction_descriptions(transactions: List[Dict]) -> Generator[str, None, None]:
-    """
-    Пример использования функции transaction_descriptions.
-    Принимает:
-        transaction (List[Dict]): Список словарей с транзакциями.
-    Возвращает:
-        через next() - описание транзакции str ("description").
-    """
-    descriptions = transaction_descriptions(transactions)
-
-    return descriptions
-
-
-# 2. card_number_generator.
-def checking_card_number_generator(start: int, stop: int) -> Generator[str, None, None]:
-    """
-    Пример использования функции transaction_descriptions.
-    Принимает:
-        start - начальное значение диапазона;
-        stop - конечное значение диапазона.
-    Возвращает:
-        номера банковских карт в формате XXXX XXXX XXXX XXXX.
-    """
-    number_generator = card_number_generator(start, stop)
-
-    return number_generator
-
-
-# Запуск функций из модулей
 if __name__ == "__main__":
-    checking_masks_functions()
-    print(checking_widget_functions1("Счет 64686473678894779589"))
-    print(checking_widget_functions2("2024-03-11T02:26:18.671407"))
-
-    """
-    Примеры входных данных для проверки функции модуля widget.py
-    Maestro 1596837868705199
-    Счет 64686473678894779589
-    MasterCard 7158300734726758
-    Счет 35383033474447895560
-    Visa Classic 6831982476737658
-    Visa Platinum 8990922113665229
-    Visa Gold 5999414228426353
-    Счет 73654108430135874305
-    """
-
-    # Данные для проверки функций из модуля processing.py
-
-    print(
-        checking_filter_by_state(
-            [
-                {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-                {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-                {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-                {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-            ],
-            "CANCELED",
-        )
-    )
-
-    print(
-        sort_by_date(
-            [
-                {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-                {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-                {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-                {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-            ],
-            False,
-        )
-    )
-
-    # Примеры использования функций модуля generators.py:
-    # 0. filter_by_currency.
-
-    result_filtering = checking_filter_by_currency(transaction, "USD")
-    try:
-        for _ in range(2):
-            print(next(result_filtering))
-    except StopIteration:
-        print("Итератор исчерпан.")
-
-    # Сверка результат:
-    """
-     {
-        "id": 939719570,
-        "state": "EXECUTED",
-        "date": "2018-06-30T02:08:58.425572",
-        "operationAmount": {
-            "amount": "9824.07",
-            "currency": {
-                "name": "USD",
-                "code": "USD"
-            }
-        },
-        "description": "Перевод организации",
-        "from": "Счет 75106830613657916952",
-        "to": "Счет 11776614605963066702"
-    }
-    {
-        "id": 142264268,
-        "state": "EXECUTED",
-        "date": "2019-04-04T23:20:05.206878",
-        "operationAmount": {
-            "amount": "79114.93",
-            "currency": {
-                "name": "USD",
-                "code": "USD"
-            }
-        },
-        "description": "Перевод со счета на счет",
-        "from": "Счет 19708645243227258542",
-        "to": "Счет 75651667383060284188"
-    }
-    """
-
-# 1. transaction_descriptions.
-result_descriptions = checking_transaction_descriptions(transaction)
-try:
-    for _ in range(5):
-        print(next(result_descriptions))
-except StopIteration:
-    print("Итератор исчерпан.")
-
-# Сверка результат:
-"""
-"Перевод организации",
-"Перевод со счета на счет",
-"Перевод со счета на счет",
-"Перевод с карты на карту",
-"Перевод организации"
-"""
-
-# 2. card_number_generator.
-
-for card_number in checking_card_number_generator(1, 5):
-    print(card_number)
-
-# Сверка результат:
-"""
-0000 0000 0000 0001
-0000 0000 0000 0002
-0000 0000 0000 0003
-0000 0000 0000 0004
-0000 0000 0000 0005
-"""
+    main()
