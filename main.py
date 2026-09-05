@@ -75,7 +75,10 @@ def main() -> None:
     # Рублевые транзакции
     ruble_choice = input("Программа: Выводить только рублевые транзакции? Да/Нет ").strip().lower()
     if ruble_choice in ("да", "yes", "y"):
-        data = list(filter_by_currency(data, "RUB"))
+        try:
+            data = list(filter_by_currency(data, "RUB"))
+        except KeyError:
+            data = [t for t in data if t.get("currency_code") == "RUB"]
 
     # Поиск по слову
     search_choice = input(
@@ -99,10 +102,23 @@ def main() -> None:
         print()
         print(f"{get_date(transaction['date'])} {transaction['description']}")
         if 'from' in transaction:
-            print(f"{transaction['from']}")
-        print(
-            f"Сумма: {transaction['operationAmount']['amount']} {transaction['operationAmount']['currency']['code']}"
-        )
+            try:
+                print(mask_account_card(transaction['from']))
+            except ValueError:
+                print(transaction['from'])
+        if 'to' in transaction:
+            try:
+                print(mask_account_card(transaction['to']))
+            except ValueError:
+                print(transaction['to'])
+        if 'operationAmount' in transaction:
+            print(
+                f"Сумма: {transaction['operationAmount']['amount']} {transaction['operationAmount']['currency']['code']}"
+            )
+        elif 'amount' in transaction and 'currency_code' in transaction:
+            print(
+                f"Сумма: {transaction['amount']} {transaction['currency_code']}"
+            )
 
 
 if __name__ == "__main__":
