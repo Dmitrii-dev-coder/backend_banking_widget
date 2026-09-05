@@ -16,6 +16,8 @@ def process_bank_search(data:list[dict], search:str)->list[dict]:
     pattern = re.compile(search, re.IGNORECASE)
 
     for transaction in data:
+        if "description" not in transaction:
+            continue
         found_transaction = re.search(pattern, transaction["description"])
         if found_transaction:
             found_transactions.append(transaction)
@@ -36,10 +38,12 @@ def process_bank_operations(data:list[dict], categories:list)->dict:
     transactions_category_count = Counter()
 
     for transaction in data:
+        if "description" not in transaction:
+            continue
         description = transaction["description"]
 
         # Если описание есть в списке категорий — считаем
-        if description in categories:
+        if description.lower() in categories:
             transactions_category_count[description] += 1
 
     return dict(transactions_category_count)

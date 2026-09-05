@@ -235,8 +235,11 @@ def run_process_bank_search() -> None:
     Обёртка для функции process_bank_search из модуля search.
     """
     data = get_transactions_from_json_file("data/operations.json")
-    search = input("Введите слово для поиска: ")
-    result = process_bank_search(data, search)
+    user_input = input("Введите слово для поиска: ")
+    search_terms = [term.strip() for term in user_input.split(",")]
+    result = []
+    for term in search_terms:
+        result.extend(process_bank_search(data, term))
     print(result)
 
 
@@ -247,7 +250,7 @@ def run_process_bank_operations() -> None:
     """
     data = get_transactions_from_json_file("data/operations.json")
     user_input = input("Введите категории для подсчета (через запятую): ")
-    categories = [c.strip() for c in user_input.split(",")]
+    categories = [c.strip().lower() for c in user_input.split(",")]
     result = process_bank_operations(data, categories)
     for category, count in result.items():
         print(f"{category}: {count}")
