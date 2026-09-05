@@ -10,13 +10,10 @@ def filter_by_state(my_list_dict: list, state: str = "EXECUTED") -> list:
     if not my_list_dict:
         raise ValueError("Входной список не должен быть пустым.")
 
-    # Проверка наличия пары "state" : "значение ("EXECUTED" или "CANCELED")".
-    for person in my_list_dict:
-        if "state" not in person:
-            return []
-
     filtered_list = []
     for dict_ in my_list_dict:
+        if "state" not in dict_:
+            continue
         if dict_["state"] == state:
             filtered_list.append(dict_)
 

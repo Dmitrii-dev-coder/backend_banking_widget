@@ -36,6 +36,7 @@ def process_bank_operations(data:list[dict], categories:list)->dict:
         значения — это количество операций в каждой категории.
     """
     transactions_category_count = Counter()
+    categories_lower = [cat.lower() for cat in categories]
 
     for transaction in data:
         if "description" not in transaction:
@@ -43,7 +44,7 @@ def process_bank_operations(data:list[dict], categories:list)->dict:
         description = transaction["description"]
 
         # Если описание есть в списке категорий — считаем
-        if description.lower() in categories:
+        if description.lower() in categories_lower:
             transactions_category_count[description] += 1
 
     return dict(transactions_category_count)
