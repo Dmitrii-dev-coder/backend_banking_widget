@@ -1,8 +1,9 @@
 import re
 from collections import Counter
+from typing import Any
 
 
-def process_bank_search(data: list[dict], search: str) -> list[dict]:
+def process_bank_search(data: list[dict[str, Any]], search: str) -> list[dict[str, Any]]:
     """
     Функция ищет банковские операции по заданной строке поиска.
     Принимает:
@@ -25,7 +26,7 @@ def process_bank_search(data: list[dict], search: str) -> list[dict]:
     return found_transactions
 
 
-def process_bank_operations(data: list[dict], categories: list) -> dict:
+def process_bank_operations(data: list[dict[str, Any]], categories: list[str]) -> dict[str, int]:
     """
     Функция группирует банковские операции по категориям и считает количество операций в каждой категории.
     Принимает:
@@ -35,7 +36,7 @@ def process_bank_operations(data: list[dict], categories: list) -> dict:
         - словарь с данными о группированных операциях в котором ключи — это названия категорий, а
         значения — это количество операций в каждой категории.
     """
-    transactions_category_count = Counter()
+    transactions_category_count: Counter[str] = Counter()
     categories_lower = [cat.lower() for cat in categories]
 
     for transaction in data:

@@ -48,7 +48,7 @@ TEST_TRANSACTIONS = [
 
 
 # Тест 001: Проверяет, что функция находит транзакции по точному совпадению в description
-def test_process_bank_search_exact_match():
+def test_process_bank_search_exact_match() -> None:
     """Находит транзакции с точным совпадением строки поиска."""
     result = process_bank_search(TEST_TRANSACTIONS, "Перевод организации")
     assert len(result) == 2
@@ -57,28 +57,28 @@ def test_process_bank_search_exact_match():
 
 
 # Тест 002: Проверяет, что функция ищет без учёта регистра (re.IGNORECASE)
-def test_process_bank_search_case_insensitive():
+def test_process_bank_search_case_insensitive() -> None:
     """Ищет транзакции без учёта регис��ра."""
     result = process_bank_search(TEST_TRANSACTIONS, "ПЕРЕВОД ОРГАНИЗАЦИИ")
     assert len(result) == 2
 
 
 # Тест 003: Проверяет, что функция возвращает пустой список при отсутствии совпадений
-def test_process_bank_search_no_match():
+def test_process_bank_search_no_match() -> None:
     """Возвращает пустой список, если ничего не найдено."""
     result = process_bank_search(TEST_TRANSACTIONS, "Не существующая строка")
     assert result == []
 
 
 # Тест 004: Проверяет, что функция находит транзакции по частичному совпадению
-def test_process_bank_search_partial_match():
+def test_process_bank_search_partial_match() -> None:
     """Находит транзакции по частичному совпадению."""
     result = process_bank_search(TEST_TRANSACTIONS, "Перевод")
     assert len(result) == 4
 
 
 # Тест 005: Проверяет, что функция возвращает транзакции с полными данными
-def test_process_bank_search_returns_full_transactions():
+def test_process_bank_search_returns_full_transactions() -> None:
     """Возвращает полные словари транзакций, а не только совпадающие поля."""
     result = process_bank_search(TEST_TRANSACTIONS, "Открытие вклада")
     assert len(result) == 1
@@ -88,7 +88,7 @@ def test_process_bank_search_returns_full_transactions():
 
 
 # Тест 006: Проверяет, что функция пропускает транзакции без поля description
-def test_process_bank_search_missing_description():
+def test_process_bank_search_missing_description() -> None:
     """Корректно обрабатывает транзакции без поля description."""
     data_with_missing = TEST_TRANSACTIONS + [{"id": 6, "state": "EXECUTED"}]
     result = process_bank_search(data_with_missing, "Перевод")
@@ -96,14 +96,14 @@ def test_process_bank_search_missing_description():
 
 
 # Тест 007: Проверяет, что функция возвращает пустой список для пустого входного списка
-def test_process_bank_search_empty_input():
+def test_process_bank_search_empty_input() -> None:
     """Возвращает пустой список при пустом входном списке."""
     result = process_bank_search([], "любая строка")
     assert result == []
 
 
 # Тест 008: Проверяет, что функция использует регулярные выражения
-def test_process_bank_search_regex_support():
+def test_process_bank_search_regex_support() -> None:
     """Поддерживает регулярные выражения для поиска."""
     # Регулярное выражение находит "Перевод" + любой текст
     result = process_bank_search(TEST_TRANSACTIONS, r"Перевод\s+\w+")
@@ -114,28 +114,28 @@ def test_process_bank_search_regex_support():
 
 
 # Тест 101: Проверяет, что функция считает количество одной категории
-def test_process_bank_operations_single_category():
+def test_process_bank_operations_single_category() -> None:
     """Считает количество операций одной категории."""
     result = process_bank_operations(TEST_TRANSACTIONS, ["Перевод организации"])
     assert result == {"Перевод организации": 2}
 
 
 # Тест 102: Проверяет, что функция считает количество нескольких категорий
-def test_process_bank_operations_multiple_categories():
+def test_process_bank_operations_multiple_categories() -> None:
     """Считает количество операций нескольких категорий."""
     result = process_bank_operations(TEST_TRANSACTIONS, ["Перевод организации", "Открытие вклада"])
     assert result == {"Перевод организации": 2, "Открытие вклада": 1}
 
 
 # Тест 103: Проверяет, что функция возвращает пустой словарь для несуществующих категорий
-def test_process_bank_operations_no_matching_categories():
+def test_process_bank_operations_no_matching_categories() -> None:
     """Возвращает пустой словарь, если категории не найдены."""
     result = process_bank_operations(TEST_TRANSACTIONS, ["Не существующая категория"])
     assert result == {}
 
 
 # Тест 104: Проверяет, что функция использует Counter из collections
-def test_process_bank_operations_uses_counter():
+def test_process_bank_operations_uses_counter() -> None:
     """Использует Counter для подсчёта операций."""
     result = process_bank_operations(TEST_TRANSACTIONS, ["Перевод организации"])
     # Результат должен быть обычным dict
@@ -144,14 +144,14 @@ def test_process_bank_operations_uses_counter():
 
 
 # Тест 105: Проверяет, что функция игнорирует регистр при сравнении
-def test_process_bank_operations_case_insensitive():
+def test_process_bank_operations_case_insensitive() -> None:
     """Сравнивает категории без учёта регистра."""
     result = process_bank_operations(TEST_TRANSACTIONS, ["перевод организации"])
     assert result == {"Перевод организации": 2}
 
 
 # Тест 106: Проверяет, что функция пропускает транзакции без поля description
-def test_process_bank_operations_missing_description():
+def test_process_bank_operations_missing_description() -> None:
     """Корректно обрабатывает транзакции без поля description."""
     data_with_missing = TEST_TRANSACTIONS + [{"id": 6, "state": "EXECUTED"}]
     result = process_bank_operations(data_with_missing, ["Перевод организации"])
@@ -159,14 +159,14 @@ def test_process_bank_operations_missing_description():
 
 
 # Тест 107: Проверяет, что функция возвращает пустой словарь для пустого входного списка
-def test_process_bank_operations_empty_input():
+def test_process_bank_operations_empty_input() -> None:
     """Возвращает пустой словарь при пустом входном списке."""
     result = process_bank_operations([], ["любая категория"])
     assert result == {}
 
 
 # Тест 108: Проверяет, что функция возвращает пустой словарь при пустом списке категорий
-def test_process_bank_operations_empty_categories():
+def test_process_bank_operations_empty_categories() -> None:
     """Возвращает пустой словарь при пустом списке категорий."""
     result = process_bank_operations(TEST_TRANSACTIONS, [])
     assert result == {}

@@ -15,6 +15,7 @@ from src.widget import get_date, mask_account_card
 # II. ======================== ОСНОВНАЯ ФУНКЦИЯ ПРОЕКТА - main() ==================================
 def main() -> None:
     """Основная функция программы — связывает всю функциональность проекта."""
+    from typing import Any as AnyType
 
     # Приветствие и меню
     print("Программа: Привет! Добро пожаловать в программу работы")
@@ -26,6 +27,7 @@ def main() -> None:
 
     # Выбор источника
     choice = input("Программа: ")
+    data: list[dict[AnyType, AnyType]] = []
 
     if choice == "1":
         print("Программа: Для обработки выбран JSON-файл.")
