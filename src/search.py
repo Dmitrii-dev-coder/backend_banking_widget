@@ -2,7 +2,7 @@ import re
 from collections import Counter
 
 
-def process_bank_search(data:list[dict], search:str)->list[dict]:
+def process_bank_search(data: list[dict], search: str) -> list[dict]:
     """
     Функция ищет банковские операции по заданной строке поиска.
     Принимает:
@@ -25,7 +25,7 @@ def process_bank_search(data:list[dict], search:str)->list[dict]:
     return found_transactions
 
 
-def process_bank_operations(data:list[dict], categories:list)->dict:
+def process_bank_operations(data: list[dict], categories: list) -> dict:
     """
     Функция группирует банковские операции по категориям и считает количество операций в каждой категории.
     Принимает:

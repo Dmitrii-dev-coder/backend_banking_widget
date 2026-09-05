@@ -4,17 +4,10 @@
 
 
 # I. =============================== ИМПОРТ ФУНКЦИЙ И МОДУЛЕЙ ПРОЕКТА ==============================
-from typing import Any, Dict, Generator, Hashable, Iterator, List
-
-import pandas as pd
-
-from src.search import process_bank_search, process_bank_operations
-from src.decorators import log
-from src.external_api import get_sum_of_transaction
-from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
-from src.masks import get_mask_account, get_mask_card_number
+from src.generators import filter_by_currency
 from src.processing import filter_by_state, sort_by_date
 from src.readers import get_transactions_from_csv_file, get_transactions_from_excel_file
+from src.search import process_bank_search
 from src.utils import get_transactions_from_json_file
 from src.widget import get_date, mask_account_card
 
@@ -50,11 +43,15 @@ def main() -> None:
     # Фильтрация по статусу (цикл до ввода корректного значения)
     valid_statuses = ["EXECUTED", "CANCELED", "PENDING"]
     while True:
-        status = input(
-            "Программа: Введите статус, по которому необходимо выполнить фильтрацию.\n"
-            "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\n"
-            "Программа: "
-        ).strip().upper()
+        status = (
+            input(
+                "Программа: Введите статус, по которому необходимо выполнить фильтрацию.\n"
+                "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\n"
+                "Программа: "
+            )
+            .strip()
+            .upper()
+        )
 
         if status in valid_statuses:
             print(f'Программа: Операции отфильтрованы по статусу "{status}"')
@@ -81,9 +78,9 @@ def main() -> None:
             data = [t for t in data if t.get("currency_code") == "RUB"]
 
     # Поиск по слову
-    search_choice = input(
-        "Программа: Отфильтровать список транзакций по определенному слову\nв описании? Да/Нет "
-    ).strip().lower()
+    search_choice = (
+        input("Программа: Отфильтровать список транзакций по определенному слову\nв описании? Да/Нет ").strip().lower()
+    )
     if search_choice in ("да", "yes", "y"):
         search = input("Программа: Введите слово для поиска: ").strip()
         data = process_bank_search(data, search)
@@ -101,24 +98,23 @@ def main() -> None:
     for transaction in data:
         print()
         print(f"{get_date(transaction['date'])} {transaction['description']}")
-        if 'from' in transaction:
+        if "from" in transaction:
             try:
-                print(mask_account_card(transaction['from']))
+                print(mask_account_card(transaction["from"]))
             except ValueError:
-                print(transaction['from'])
-        if 'to' in transaction:
+                print(transaction["from"])
+        if "to" in transaction:
             try:
-                print(mask_account_card(transaction['to']))
+                print(mask_account_card(transaction["to"]))
             except ValueError:
-                print(transaction['to'])
-        if 'operationAmount' in transaction:
+                print(transaction["to"])
+        if "operationAmount" in transaction:
             print(
-                f"Сумма: {transaction['operationAmount']['amount']} {transaction['operationAmount']['currency']['code']}"
+                f"Сумма: {transaction['operationAmount']['amount']} "
+                f"{transaction['operationAmount']['currency']['code']}"
             )
-        elif 'amount' in transaction and 'currency_code' in transaction:
-            print(
-                f"Сумма: {transaction['amount']} {transaction['currency_code']}"
-            )
+        elif "amount" in transaction and "currency_code" in transaction:
+            print(f"Сумма: {transaction['amount']} {transaction['currency_code']}")
 
 
 if __name__ == "__main__":

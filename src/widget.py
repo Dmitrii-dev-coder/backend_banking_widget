@@ -14,10 +14,16 @@ ERROR_TEXT = (
 
 # Допустимые логотипы карт
 VALID_CARD_LOGOS = [
-    "Visa Classic", "Visa Platinum", "Visa Gold", "Visa",
-    "MasterCard", "Mastercard",
-    "Maestro", "МИР",
-    "American Express", "Discover",
+    "Visa Classic",
+    "Visa Platinum",
+    "Visa Gold",
+    "Visa",
+    "MasterCard",
+    "Mastercard",
+    "Maestro",
+    "МИР",
+    "American Express",
+    "Discover",
 ]
 
 

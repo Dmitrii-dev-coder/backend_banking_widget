@@ -1,9 +1,8 @@
 # Проверка функций: process_bank_search, process_bank_operations из модуля src.search.
 
-import pytest
+import pytest  # noqa: F401
 
-from src.search import process_bank_search, process_bank_operations
-
+from src.search import process_bank_operations, process_bank_search
 
 # ========================== ТЕСТОВЫЕ ДАННЫЕ ==========================
 TEST_TRANSACTIONS = [
@@ -46,6 +45,7 @@ TEST_TRANSACTIONS = [
 
 
 # ==================== 0. Проверка функции process_bank_search ====================
+
 
 # Тест 001: Проверяет, что функция находит транзакции по точному совпадению в description
 def test_process_bank_search_exact_match():
@@ -112,31 +112,29 @@ def test_process_bank_search_regex_support():
 
 # ==================== 1. Проверка функции process_bank_operations ====================
 
-# Тест 009: Проверяет, что функция считает количество одной категории
+
+# Тест 101: Проверяет, что функция считает количество одной категории
 def test_process_bank_operations_single_category():
     """Считает количество операций одной категории."""
     result = process_bank_operations(TEST_TRANSACTIONS, ["Перевод организации"])
     assert result == {"Перевод организации": 2}
 
 
-# Тест 010: Проверяет, что функция считает количество нескольких категорий
+# Тест 102: Проверяет, что функция считает количество нескольких категорий
 def test_process_bank_operations_multiple_categories():
     """Считает количество операций нескольких категорий."""
-    result = process_bank_operations(
-        TEST_TRANSACTIONS,
-        ["Перевод организации", "Открытие вклада"]
-    )
+    result = process_bank_operations(TEST_TRANSACTIONS, ["Перевод организации", "Открытие вклада"])
     assert result == {"Перевод организации": 2, "Открытие вклада": 1}
 
 
-# Тест 011: Проверяет, что функция возвращает пустой словарь для несуществующих категорий
+# Тест 103: Проверяет, что функция возвращает пустой словарь для несуществующих категорий
 def test_process_bank_operations_no_matching_categories():
     """Возвращает пустой словарь, если категории не найдены."""
     result = process_bank_operations(TEST_TRANSACTIONS, ["Не существующая категория"])
     assert result == {}
 
 
-# Тест 012: Проверяет, что функция использует Counter из collections
+# Тест 104: Проверяет, что функция использует Counter из collections
 def test_process_bank_operations_uses_counter():
     """Использует Counter для подсчёта операций."""
     result = process_bank_operations(TEST_TRANSACTIONS, ["Перевод организации"])
@@ -145,14 +143,14 @@ def test_process_bank_operations_uses_counter():
     assert result == {"Перевод организации": 2}
 
 
-# Тест 013: Проверяет, что функция игнорирует регистр при сравнении
+# Тест 105: Проверяет, что функция игнорирует регистр при сравнении
 def test_process_bank_operations_case_insensitive():
     """Сравнивает категории без учёта регистра."""
     result = process_bank_operations(TEST_TRANSACTIONS, ["перевод организации"])
     assert result == {"Перевод организации": 2}
 
 
-# Тест 014: Проверяет, что функция пропускает транзакции без поля description
+# Тест 106: Проверяет, что функция пропускает транзакции без поля description
 def test_process_bank_operations_missing_description():
     """Корректно обрабатывает транзакции без поля description."""
     data_with_missing = TEST_TRANSACTIONS + [{"id": 6, "state": "EXECUTED"}]
@@ -160,14 +158,14 @@ def test_process_bank_operations_missing_description():
     assert result == {"Перевод организации": 2}
 
 
-# Тест 015: Проверяет, что функция возвращает пустой словарь для пустого входного списка
+# Тест 107: Проверяет, что функция возвращает пустой словарь для пустого входного списка
 def test_process_bank_operations_empty_input():
     """Возвращает пустой словарь при пустом входном списке."""
     result = process_bank_operations([], ["любая категория"])
     assert result == {}
 
 
-# Тест 016: Проверяет, что функция возвращает пустой словарь при пустом списке категорий
+# Тест 108: Проверяет, что функция возвращает пустой словарь при пустом списке категорий
 def test_process_bank_operations_empty_categories():
     """Возвращает пустой словарь при пустом списке категорий."""
     result = process_bank_operations(TEST_TRANSACTIONS, [])

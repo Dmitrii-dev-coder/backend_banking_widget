@@ -1,6 +1,6 @@
 from pathlib import Path
-from typing import Any
-from unittest.mock import mock_open, patch, MagicMock
+from typing import Any  # noqa: F401
+from unittest.mock import MagicMock, mock_open, patch
 
 import pandas as pd
 
